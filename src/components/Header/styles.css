@@ -13,7 +13,7 @@
   }
 
   .links a {
-    color: #8ea6bb;
+    color: #adb9c4;
     text-decoration: none !important;
     font-weight: 500;
   }
@@ -22,3 +22,19 @@
     color: var(--white);
     transition: all 0.3s;
   }
+
+  .gradient{
+    position: absolute;
+    width: 800px;
+    height: 150px;
+    margin: auto;
+    background: var(--blue);
+    filter: blur(100px);
+    z-index: -1;
+    top: -120px;
+  }
+
+  .active {
+    color: var(--white) !important;
+  }
+  
