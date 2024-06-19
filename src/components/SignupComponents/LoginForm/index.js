@@ -7,6 +7,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../../../slices/userSlice";
+import { toast } from "react-toastify";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -38,17 +39,21 @@ function LoginForm() {
             uid: user.uid,
           })
         );
-        //toast.success("Login Successful!");
-        //setLoading(false);
+        toast.success("Login Successful!");
+        setLoading(false);
         navigate("/profile");
 
         // Navigate to the profile page
       } catch (error) {
         console.error("Error signing in:", error); 
+        setLoading(false);
+        toast.error(error.message);
       }
-    } 
+    } else {
+      toast.error("Make sure email and password are not empty");
+      setLoading(false);
+    }
   };
-
       return (
       <div>  
             <Inputcomponent 

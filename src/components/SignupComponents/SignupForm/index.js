@@ -7,19 +7,23 @@ import { doc, setDoc } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setUser } from '../../../slices/userSlice';
+import { toast } from "react-toastify";
+
 
 function SignUpForm() {
     const[fullName, setFullName] = useState("");
     const[email, setEmail] = useState("");
     const[password, setPassword] = useState("");
     const[confirmPassword, setConfirmPassword] = useState("");
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleSignup = async () => {
       console.log("Handling SignUp...");
+      setLoading(true);
       if (
-        password == confirmPassword &&
+        password === confirmPassword &&
         password.length >= 6 &&
         fullName &&
         email
@@ -50,13 +54,30 @@ function SignUpForm() {
             })
           );
 
+        toast.success("User has been created!");
+        setLoading(false);
         navigate("/profile")
 
         }  catch (e){
          console.log("error", e);
-       }
-       } else { // throw  error}
-       }
+         toast.error(e.message);
+         setLoading(false);
+
+         }
+         //This shows and error if incorrect password and if length not met
+       } else {
+        if (password !== confirmPassword) {
+          toast.error(
+            "Make Sure Password and Confirm Password matches!"
+          );
+        } else if (password.length < 6) {
+          toast.error(
+            "Make Sure Password is more than 6 digits long!"
+          );
+        }
+        setLoading(false);
+        // throw an error
+      }
     };
       return (
       <div>
@@ -88,7 +109,11 @@ function SignUpForm() {
             type="password" 
             required={true}
             />
-            <Button text={"SignUp"} onClick={handleSignup}/>
+            <Button
+               text={loading ? "Loading..." : "Signup"}
+               disabled={loading}
+               onClick={handleSignup}
+      />
         </div>
       );
     }
