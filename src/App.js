@@ -10,6 +10,7 @@ import { auth, db } from './firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { setUser } from './slices/userSlice';
 import { useDispatch } from 'react-redux';
+import PrivateRoutes from './components/common/PrivateRoutes';
 
 function App() {
   const dispatch = useDispatch();
@@ -53,7 +54,9 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<SignUpPage />} />
+            <Route element={<PrivateRoutes />}>
             <Route path="/profile" element={<Profile />} />
+            </Route>
           </Routes>
         </Router>
     </div>

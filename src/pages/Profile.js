@@ -4,6 +4,17 @@ import Header from '../components/common/Header';
 
 function Profile () {
     const user = useSelector((state) => state.user.user);
+   
+    console.log("My User", user);
+   if (!user) {
+    return <p>Loading...</p>
+   }
+
+
+
+
+
+
 
     return (
         <div>
