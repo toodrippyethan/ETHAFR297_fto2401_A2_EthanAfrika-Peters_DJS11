@@ -15,7 +15,7 @@ SignUp
 <Link to="/podcasts" className={currentPath == "/podcasts" ? "active" : ""}>
 Podcasts
 </Link>
-<Link to="/start-a-podcast" className={currentPath == "/start-a-podcast" ? "active" : ""}>
+<Link to="/create-a-podcast" className={currentPath == "/start-a-podcast" ? "active" : ""}>
 Start a Podcast
 </Link>
 <Link to="/profile" className={currentPath == "/profile" ? "active" : ""}>
