@@ -1,34 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Header from '../components/common/Header';
 import PodcastCard from '../components/Podcasts/PodcastCard';
 import InputComponent from '../components/common/Input';
-import { fetchAllShows } from '../api'; // Import API function
+import { useSelector } from 'react-redux'; // Import useSelector for Redux state access
 
 function PodcastsPage() {
-  const [shows, setShows] = useState([]);
+  const podcasts = useSelector((state) => state.podcasts.podcasts); // Get podcasts from Redux state
   const [search, setSearch] = useState('');
-
-  useEffect(() => {
-    fetchShows();
-  }, []);
-
-  const fetchShows = async () => {
-    try {
-      const showsData = await fetchAllShows();
-      setShows(showsData);
-    } catch (error) {
-      console.error('Error fetching shows:', error);
-      // Handle error state or show error message to the user
-    }
-  };
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
   };
 
   // Filter shows based on search input
-  const filteredShows = shows.filter((show) =>
-    show.title.toLowerCase().includes(search.trim().toLowerCase())
+  const filteredPodcasts = podcasts.filter((podcast) =>
+    podcast.title.toLowerCase().includes(search.trim().toLowerCase())
   );
 
   return (
@@ -43,19 +29,19 @@ function PodcastsPage() {
           type="text"
         />
 
-        {filteredShows.length > 0 ? (
+        {filteredPodcasts.length > 0 ? (
           <div className="podcasts-flex" style={{ marginTop: '1.5rem' }}>
-            {filteredShows.map((show) => (
+            {filteredPodcasts.map((podcast) => (
               <PodcastCard
-                key={show.id}
-                id={show.id}
-                title={show.title}
-                displayImage={show.displayImage} // Adjust based on API response structure
+                key={podcast.id}
+                id={podcast.id}
+                title={podcast.title}
+                displayImage={podcast.displayImage} // Adjust based on API response structure
               />
             ))}
           </div>
         ) : (
-          <p>{search ? 'Show Not Found' : 'Loading...'}</p>
+          <p>{search ? 'Podcast Not Found' : 'No Podcasts On The Platform'}</p>
         )}
       </div>
     </div>
