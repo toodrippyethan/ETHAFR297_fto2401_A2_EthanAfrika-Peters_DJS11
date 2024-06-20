@@ -1,18 +1,5 @@
-// podcastSlice.js
-
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_BASE_URL = 'https://podcast-api.netlify.app';
-
-// Thunk to fetch all shows
-export const fetchAllShowsAsync = createAsyncThunk(
-  'podcasts/fetchAllShows',
-  async () => {
-    const response = await axios.get(`${API_BASE_URL}`);
-    return response.data;
-  }
-);
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchAllShows, fetchShowById } from '../api'; // Import API functions
 
 const initialState = {
   shows: [],
@@ -24,10 +11,14 @@ const podcastSlice = createSlice({
   name: 'podcasts',
   initialState,
   reducers: {
-    setPodcasts: (state, action) => {
+    setShows: (state, action) => {
       state.shows = action.payload;
-      state.loading = false;
-      state.error = null;
+    },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
     },
     sortShowsAZ: (state) => {
       state.shows.sort((a, b) => a.title.localeCompare(b.title));
@@ -35,24 +26,37 @@ const podcastSlice = createSlice({
     sortShowsZA: (state) => {
       state.shows.sort((a, b) => b.title.localeCompare(a.title));
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchAllShowsAsync.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(fetchAllShowsAsync.fulfilled, (state, action) => {
-        state.shows = action.payload;
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(fetchAllShowsAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      });
+    setPodcasts: (state, action) => {
+      state.shows = action.payload;
+    },
   },
 });
 
-export const { setPodcasts, sortShowsAZ, sortShowsZA } = podcastSlice.actions;
+// Thunks for fetching data
+export const fetchAllShowsAsync = () => async (dispatch) => {
+  dispatch(podcastSlice.actions.setLoading(true));
+  try {
+    const showsData = await fetchAllShows();
+    dispatch(podcastSlice.actions.setShows(showsData));
+    dispatch(podcastSlice.actions.setLoading(false));
+  } catch (error) {
+    dispatch(podcastSlice.actions.setError(error.message));
+    dispatch(podcastSlice.actions.setLoading(false));
+  }
+};
 
+export const fetchShowByIdAsync = (showId) => async (dispatch) => {
+  dispatch(podcastSlice.actions.setLoading(true));
+  try {
+    const showData = await fetchShowById(showId);
+    // Handle individual show data as needed
+    dispatch(podcastSlice.actions.setLoading(false));
+    return showData; // Return show data to the caller (e.g., for displaying details)
+  } catch (error) {
+    dispatch(podcastSlice.actions.setError(error.message));
+    dispatch(podcastSlice.actions.setLoading(false));
+  }
+};
+
+export const { setShows, setLoading, setError, sortShowsAZ, sortShowsZA, setPodcasts } = podcastSlice.actions;
 export default podcastSlice.reducer;
