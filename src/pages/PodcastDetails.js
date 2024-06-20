@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../components/common/Header';
-import { fetchShowById } from '../api'; // Import API function for fetching show details
+import { fetchShowById, fetchGenreById } from '../api'; // Import API functions for fetching show and genre details
 
 function PodcastDetails() {
   const { id } = useParams(); // Get ID from route params
   const [podcast, setPodcast] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedSeason, setSelectedSeason] = useState(null);
 
   useEffect(() => {
     const fetchPodcastDetails = async () => {
@@ -29,6 +30,11 @@ function PodcastDetails() {
     };
   }, [id]);
 
+  const handleSeasonChange = (event) => {
+    const selectedSeasonId = parseInt(event.target.value);
+    setSelectedSeason(selectedSeasonId);
+  };
+
   if (loading) {
     return <p>Loading...</p>; // Show loading state while fetching data
   }
@@ -36,12 +42,6 @@ function PodcastDetails() {
   if (!podcast) {
     return <p>No such Podcast!</p>; // Handle case where podcast data is not available
   }
-
-  const formattedLastUpdated = new Date(podcast.lastUpdated).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
   return (
     <div>
@@ -53,22 +53,28 @@ function PodcastDetails() {
           {podcast.seasons && podcast.seasons.length > 0 && (
             <div className="seasons">
               <p>{podcast.seasons.length} {podcast.seasons.length === 1 ? 'Season' : 'Seasons'}</p>
-              <ul>
+              <select onChange={handleSeasonChange}>
+                <option value="">Select Season</option>
                 {podcast.seasons.map((season, index) => (
-                  <li key={index}>{season.title}</li>
+                  <option key={index} value={season.id}>{season.title}</option>
                 ))}
-              </ul>
+              </select>
             </div>
           )}
-          {podcast.genres&& podcast.genres.length > 0 && (
+          {podcast.genres && podcast.genres.length > 0 && (
             <div className="genres">
               <p>Genres: {podcast.genres.map(genre => genre.name).join(', ')}</p>
             </div>
           )}
-          <p>Last Updated: {formattedLastUpdated}</p>
+          <p>Last Updated: {podcast.updatedAt}</p>
+          <p>Description: {podcast.description}</p>
+          {selectedSeason && (
+            <div>
+              <h2>{podcast.seasons.find(season => season.id === selectedSeason).title}</h2>
+              {/* Render episodes or additional details for the selected season */}
+            </div>
+          )}
         </div>
-        <p>Description: {podcast.description}</p>
-        {/* Render other podcast details as needed */}
       </div>
     </div>
   );
