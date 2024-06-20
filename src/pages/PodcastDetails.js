@@ -37,12 +37,36 @@ function PodcastDetails() {
     return <p>No such Podcast!</p>; // Handle case where podcast data is not available
   }
 
+  const formattedLastUpdated = new Date(podcast.lastUpdated).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   return (
     <div>
       <Header />
       <div className="podcast-details">
         <h1>{podcast.title}</h1>
         <img src={podcast.displayImage} alt={podcast.title} />
+        <div className="details">
+          {podcast.seasons && podcast.seasons.length > 0 && (
+            <div className="seasons">
+              <p>{podcast.seasons.length} {podcast.seasons.length === 1 ? 'Season' : 'Seasons'}</p>
+              <ul>
+                {podcast.seasons.map((season, index) => (
+                  <li key={index}>{season.title}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {podcast.genres&& podcast.genres.length > 0 && (
+            <div className="genres">
+              <p>Genres: {podcast.genres.map(genre => genre.name).join(', ')}</p>
+            </div>
+          )}
+          <p>Last Updated: {formattedLastUpdated}</p>
+        </div>
         <p>Description: {podcast.description}</p>
         {/* Render other podcast details as needed */}
       </div>

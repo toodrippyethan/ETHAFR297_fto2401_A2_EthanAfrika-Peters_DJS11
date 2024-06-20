@@ -80,20 +80,20 @@ function PodcastsPage() {
               <option value="za">Z-A</option>
             </select>
           </div>
-        </div>
-        <div className="dropdown-wrapper" style={{ marginTop: '1rem' }}>
-          <label htmlFor="genreDropdown"></label>
-          <select
-            id="genreDropdown"
-            value={selectedGenre}
-            onChange={handleGenreChange}
-            className="dropdown-select"
-          >
-            <option value="">All Genres</option>
-            {genres.map(genre => (
-              <option key={genre} value={genre}>{genre}</option>
-            ))}
-          </select>
+          <div className="dropdown-wrapper" style={{ marginTop: '1rem' }}>
+            <label htmlFor="genreDropdown"></label>
+            <select
+              id="genreDropdown"
+              value={selectedGenre}
+              onChange={handleGenreChange}
+              className="dropdown-select"
+            >
+              <option value="">All Genres</option>
+              {genres.map(genre => (
+                <option key={genre} value={genre}>{genre}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {loading ? (
@@ -106,6 +106,8 @@ function PodcastsPage() {
                 id={show.id}
                 title={show.title}
                 displayImage={show.displayImage}
+                genres={show.genres}
+                numSeasons={show.numSeasons} // Assuming numSeasons is fetched from API
               />
             ))}
           </div>

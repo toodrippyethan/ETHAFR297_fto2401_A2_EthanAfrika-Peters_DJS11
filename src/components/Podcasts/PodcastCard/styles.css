@@ -1,6 +1,6 @@
 .podcast-card {
   width: 250px;
-  min-height: 250px;
+  height: auto; /* Adjust height based on your design */
   background: linear-gradient(
     177.7deg,
     rgba(58, 129, 191, 0.3) 1.63%,
@@ -10,24 +10,52 @@
   padding: 0.5rem;
   opacity: 0.7;
   cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none; /* Remove underline from Link */
+  color: inherit; /* Inherit text color from parent */
+}
+
+.podcast-card:hover {
+  opacity: 1;
+  transform: translateY(-5px);
 }
 
 .display-image-podcast {
   width: 100%;
-  height: 230px; /* Adjust height as needed */
-  object-fit: cover; /* Ensure the image covers the container */
+  height: 230px; /* Adjust height based on your design */
+  object-fit: cover;
   border-top-left-radius: 0.8rem;
   border-top-right-radius: 0.8rem;
 }
 
+.podcast-details {
+  padding: 0.5rem;
+}
 
-.podcast-card:hover {
-  opacity: 1;
-  transition: all 0.3s;
+.title-and-season {
+  display: flex;
+  justify-content: space-between;
 }
 
 .title-podcast {
-  color: var(--white) !important;
-  text-decoration: none !important;
-  margin: 0.5rem 0rem;
+  color: var(--white); /* Adjust text color based on your design */
+  font-size: 1.2rem; /* Adjust font size based on your design */
+  margin: 0.5rem 0;
+}
+
+.seasons {
+  font-size: 0.9rem; /* Adjust font size based on your design */
+  color: var(--light-gray); /* Adjust text color based on your design */
+}
+
+.genres {
+  margin-top: 0.5rem;
+}
+
+.genres p {
+  font-size: 0.9rem; /* Adjust font size based on your design */
+  color: var(--light-gray); /* Adjust text color based on your design */
 }
