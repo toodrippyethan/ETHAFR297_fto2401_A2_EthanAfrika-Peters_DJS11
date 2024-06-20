@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Handles() {
+function PodcastDetailsPage() {
     return (
         <div></div>
     )
 }
 
-export default Handles
+export default PodcastDetailsPage

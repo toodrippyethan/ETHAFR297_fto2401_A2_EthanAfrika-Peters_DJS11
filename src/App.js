@@ -12,6 +12,8 @@ import { setUser } from './slices/userSlice';
 import { useDispatch } from 'react-redux';
 import PrivateRoutes from './components/common/PrivateRoutes';
 import CreateAPodcast from './pages/CreateAPodcast';
+import PodcastsPage from './pages/Podcasts';
+import PodcastDetailsPage from './pages/PodcastDetails';
 
 function App() {
   const dispatch = useDispatch();
@@ -58,6 +60,8 @@ function App() {
             <Route element={<PrivateRoutes />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/create-a-podcast" element={<CreateAPodcast />} />
+            <Route path="/podcasts" element={<PodcastsPage />} />
+            <Route path="/podcast/:id" element={<PodcastDetailsPage />} />
             </Route>
           </Routes>
         </Router>
