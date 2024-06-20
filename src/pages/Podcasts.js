@@ -24,33 +24,44 @@ function PodcastsPage() {
   const [search, setSearch] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [sortOption, setSortOption] = useState('');
+  const [filteredShows, setFilteredShows] = useState([]);
 
   useEffect(() => {
     dispatch(fetchAllShowsAsync());
   }, [dispatch]);
 
+  useEffect(() => {
+    let filtered = [...shows]; // Make a copy of the shows array
+
+    if (selectedGenre) {
+      filtered = filtered.filter(show => show.genres.includes(selectedGenre));
+    }
+
+    if (search) {
+      filtered = filtered.filter(show =>
+        show.title.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (sortOption === 'az') {
+      filtered.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortOption === 'za') {
+      filtered.sort((a, b) => b.title.localeCompare(a.title));
+    }
+
+    setFilteredShows(filtered);
+  }, [shows, search, selectedGenre, sortOption]);
+
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
-    // You can filter shows based on title here if needed
   };
 
   const handleGenreChange = (event) => {
     setSelectedGenre(event.target.value);
-    // Filter shows by selected genre
-    const filteredShows = shows.filter(show =>
-      show.genres.includes(event.target.value)
-    );
-    dispatch(setPodcasts(filteredShows));
   };
 
   const handleSortChange = (event) => {
-    const selectedOption = event.target.value;
-    setSortOption(selectedOption);
-    if (selectedOption === 'az') {
-      dispatch(sortShowsAZ());
-    } else if (selectedOption === 'za') {
-      dispatch(sortShowsZA());
-    }
+    setSortOption(event.target.value);
   };
 
   return (
@@ -98,9 +109,9 @@ function PodcastsPage() {
 
         {loading ? (
           <p>Loading...</p>
-        ) : shows.length > 0 ? (
+        ) : filteredShows.length > 0 ? (
           <div className="podcasts-flex">
-            {shows.map(show => (
+            {filteredShows.map(show => (
               <PodcastCard
                 key={show.id}
                 id={show.id}
