@@ -1,20 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../components/common/Header';
 import PodcastCard from '../components/Podcasts/PodcastCard';
 import InputComponent from '../components/common/Input';
-import { useSelector } from 'react-redux'; // Import useSelector for Redux state access
+import { useSelector, useDispatch } from 'react-redux';
+import { sortShowsAZ, sortShowsZA, fetchAllShowsAsync, setPodcasts } from '../slices/podcastSlice'; // Import Redux actions
 
 function PodcastsPage() {
-  const podcasts = useSelector((state) => state.podcasts.podcasts); // Get podcasts from Redux state
+  const dispatch = useDispatch();
+  const shows = useSelector((state) => state.podcasts.shows);
+  const loading = useSelector((state) => state.podcasts.loading);
   const [search, setSearch] = useState('');
+  const [sortOption, setSortOption] = useState(''); // State to store selected sorting option
+
+  useEffect(() => {
+    dispatch(fetchAllShowsAsync()); // Fetch all shows when component mounts
+  }, [dispatch]);
+
+  const handleSortChange = (event) => {
+    const selectedOption = event.target.value;
+    setSortOption(selectedOption);
+
+    if (selectedOption === 'az') {
+      dispatch(sortShowsAZ());
+    } else if (selectedOption === 'za') {
+      dispatch(sortShowsZA());
+    }
+  };
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
+    // Dispatch action to set filtered podcasts here if needed
+    const filteredPodcasts = shows.filter((item) =>
+      item.title.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    dispatch(setPodcasts(filteredPodcasts));
   };
 
-  // Filter shows based on search input
-  const filteredPodcasts = podcasts.filter((podcast) =>
-    podcast.title.toLowerCase().includes(search.trim().toLowerCase())
+  // Filter shows based on search criteria
+  const filteredShows = shows.filter((show) =>
+    show.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -22,26 +46,43 @@ function PodcastsPage() {
       <Header />
       <div className="input-wrapper" style={{ marginTop: '2rem' }}>
         <h1>Discover Podcasts</h1>
-        <InputComponent
-          state={search}
-          setState={handleSearchChange}
-          placeholder="Search By Title"
-          type="text"
-        />
+        <div className="input-and-dropdown">
+          <div className="search-input">
+            <InputComponent
+              state={search}
+              setState={handleSearchChange}
+              placeholder="Search By Title"
+              type="text"
+            />
+          </div>
+          <div className="dropdown-wrapper">
+            <select
+              value={sortOption}
+              onChange={handleSortChange}
+              className="dropdown-select"
+            >
+              <option value="">Sort By</option>
+              <option value="az">A-Z</option>
+              <option value="za">Z-A</option>
+            </select>
+          </div>
+        </div>
 
-        {filteredPodcasts.length > 0 ? (
+        {loading ? (
+          <p>Loading...</p>
+        ) : filteredShows.length > 0 ? (
           <div className="podcasts-flex" style={{ marginTop: '1.5rem' }}>
-            {filteredPodcasts.map((podcast) => (
+            {filteredShows.map((show) => (
               <PodcastCard
-                key={podcast.id}
-                id={podcast.id}
-                title={podcast.title}
-                displayImage={podcast.displayImage} // Adjust based on API response structure
+                key={show.id}
+                id={show.id}
+                title={show.title}
+                displayImage={show.displayImage}
               />
             ))}
           </div>
         ) : (
-          <p>{search ? 'Podcast Not Found' : 'No Podcasts On The Platform'}</p>
+          <p>No shows found.</p>
         )}
       </div>
     </div>

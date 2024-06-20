@@ -1,3 +1,5 @@
+// api.js
+
 import axios from 'axios';
 
 const API_BASE_URL = 'https://podcast-api.netlify.app';
@@ -13,18 +15,7 @@ export const fetchAllShows = async () => {
   }
 };
 
-// Function to fetch genres
-export const fetchGenreById = async (genreId) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/genre/${genreId}`);
-    return response.data; // Assuming API response structure for a genre object
-  } catch (error) {
-    console.error(`Error fetching genre ${genreId}:`, error);
-    throw error; // Propagate error to the calling component for handling
-  }
-};
-
-// Function to fetch specific show details
+// Function to fetch specific show details by ID
 export const fetchShowById = async (showId) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/id/${showId}`);

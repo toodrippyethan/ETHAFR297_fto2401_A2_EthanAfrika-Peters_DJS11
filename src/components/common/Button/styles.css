@@ -16,3 +16,31 @@
     transition: all 0.2s;
   }
   
+  .dropdown-select {
+    padding: 7px;
+    margin-left: 18px;
+    font-size: 16px;
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 6px; /* Add border radius for rounded corners */
+    background-color: #fff; /* Set background color */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    outline: none; /* Remove outline on focus */
+    transition: border-color 0.3s ease; /* Add transition for smooth hover effect */
+  
+    /* Adjust dropdown arrow */
+    appearance: none; 
+    background-image: url('data:image/svg+xml;charset=utf8,%3Csvg fill="%23444444" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M7 10l5 5 5-5z" /%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    padding-right: 35px; /* Adjust padding for arrow space */
+  }
+  
+  .dropdown-select:hover,
+  .dropdown-select:focus {
+    border-color: #666; /* Darken border color on hover/focus */
+  }
+  
+  .dropdown-select option {
+    background-color: #fff; /* Set background color for options */
+  }
+  
