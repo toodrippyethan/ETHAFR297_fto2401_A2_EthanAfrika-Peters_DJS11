@@ -3,23 +3,49 @@ import Header from '../components/common/Header';
 import PodcastCard from '../components/Podcasts/PodcastCard';
 import InputComponent from '../components/common/Input';
 import { useSelector, useDispatch } from 'react-redux';
-import { sortShowsAZ, sortShowsZA, fetchAllShowsAsync, setPodcasts } from '../slices/podcastSlice'; // Import Redux actions
+import { fetchAllShowsAsync, setPodcasts, sortShowsAZ, sortShowsZA } from '../slices/podcastSlice';
+
+const genres = [
+  'Personal Growth',
+  'Investigative Journalism',
+  'History',
+  'Comedy',
+  'Entertainment',
+  'Business',
+  'Fiction',
+  'News',
+  'Kids and Family',
+];
 
 function PodcastsPage() {
   const dispatch = useDispatch();
   const shows = useSelector((state) => state.podcasts.shows);
   const loading = useSelector((state) => state.podcasts.loading);
   const [search, setSearch] = useState('');
-  const [sortOption, setSortOption] = useState(''); // State to store selected sorting option
+  const [selectedGenre, setSelectedGenre] = useState('');
+  const [sortOption, setSortOption] = useState('');
 
   useEffect(() => {
-    dispatch(fetchAllShowsAsync()); // Fetch all shows when component mounts
+    dispatch(fetchAllShowsAsync());
   }, [dispatch]);
+
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+    // You can filter shows based on title here if needed
+  };
+
+  const handleGenreChange = (event) => {
+    setSelectedGenre(event.target.value);
+    // Filter shows by selected genre
+    const filteredShows = shows.filter(show =>
+      show.genres.includes(event.target.value)
+    );
+    dispatch(setPodcasts(filteredShows));
+  };
 
   const handleSortChange = (event) => {
     const selectedOption = event.target.value;
     setSortOption(selectedOption);
-
     if (selectedOption === 'az') {
       dispatch(sortShowsAZ());
     } else if (selectedOption === 'za') {
@@ -27,26 +53,12 @@ function PodcastsPage() {
     }
   };
 
-  const handleSearchChange = (event) => {
-    setSearch(event.target.value);
-    // Dispatch action to set filtered podcasts here if needed
-    const filteredPodcasts = shows.filter((item) =>
-      item.title.toLowerCase().includes(event.target.value.toLowerCase())
-    );
-    dispatch(setPodcasts(filteredPodcasts));
-  };
-
-  // Filter shows based on search criteria
-  const filteredShows = shows.filter((show) =>
-    show.title.toLowerCase().includes(search.toLowerCase())
-  );
-
   return (
     <div>
       <Header />
-      <div className="input-wrapper" style={{ marginTop: '2rem' }}>
+      <div className="input-wrapper">
         <h1>Discover Podcasts</h1>
-        <div className="input-and-dropdown">
+        <div className="search-and-dropdown">
           <div className="search-input">
             <InputComponent
               state={search}
@@ -56,7 +68,9 @@ function PodcastsPage() {
             />
           </div>
           <div className="dropdown-wrapper">
+            <label htmlFor="sortDropdown"></label>
             <select
+              id="sortDropdown"
               value={sortOption}
               onChange={handleSortChange}
               className="dropdown-select"
@@ -67,12 +81,26 @@ function PodcastsPage() {
             </select>
           </div>
         </div>
+        <div className="dropdown-wrapper" style={{ marginTop: '1rem' }}>
+          <label htmlFor="genreDropdown"></label>
+          <select
+            id="genreDropdown"
+            value={selectedGenre}
+            onChange={handleGenreChange}
+            className="dropdown-select"
+          >
+            <option value="">All Genres</option>
+            {genres.map(genre => (
+              <option key={genre} value={genre}>{genre}</option>
+            ))}
+          </select>
+        </div>
 
         {loading ? (
           <p>Loading...</p>
-        ) : filteredShows.length > 0 ? (
-          <div className="podcasts-flex" style={{ marginTop: '1.5rem' }}>
-            {filteredShows.map((show) => (
+        ) : shows.length > 0 ? (
+          <div className="podcasts-flex">
+            {shows.map(show => (
               <PodcastCard
                 key={show.id}
                 id={show.id}
