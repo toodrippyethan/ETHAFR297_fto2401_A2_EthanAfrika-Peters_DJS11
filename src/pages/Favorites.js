@@ -1,4 +1,4 @@
-// Favorites.js
+/* eslint-disable no-unused-vars */
 import React from 'react';
 
 const Favorites = ({ favorites, removeFromFavorites, showHeader = true }) => {
