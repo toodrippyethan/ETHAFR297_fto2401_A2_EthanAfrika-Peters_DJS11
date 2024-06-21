@@ -8,12 +8,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import PrivateRoutes from './components/common/PrivateRoutes';
 import Favorite from './pages/Favorite';
 import PodcastsPage from './pages/Podcasts';
+import AudioPlayer from './components/common/AudioPlayer'; // Import the AudioPlayer component
 
 function App() {
   return (
     <div className="App">
-      <ToastContainer/>
+      <ToastContainer />
       <Router>
+        {/* Render the AudioPlayer component outside the Routes */}
+        <AudioPlayer /> 
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route element={<PrivateRoutes />}>

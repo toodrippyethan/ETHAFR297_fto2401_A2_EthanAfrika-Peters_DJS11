@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import "./styles.css";
+import "../../../index.css";
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 
 function AudioPlayer({ audioSrc, image }) {
@@ -16,19 +16,11 @@ function AudioPlayer({ audioSrc, image }) {
   };
 
   const togglePlay = () => {
-    if (isPlaying) {
-      setIsPlaying(false);
-    } else {
-      setIsPlaying(true);
-    }
+    setIsPlaying(!isPlaying);
   };
 
   const toggleMute = () => {
-    if (isMute) {
-      setIsMute(false);
-    } else {
-      setIsMute(true);
-    }
+    setIsMute(!isMute);
   };
 
   const handleVolume = (e) => {
@@ -88,7 +80,7 @@ function AudioPlayer({ audioSrc, image }) {
 
   return (
     <div className="custom-audio-player">
-      <img src={image} className="display-image-player" />
+      <img src={image} alt="Podcast Cover" className="display-image-player" />
       <audio ref={audioRef} src={audioSrc} />
       <p className="audio-btn" onClick={togglePlay}>
         {isPlaying ? <FaPause /> : <FaPlay />}

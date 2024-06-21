@@ -1,7 +1,7 @@
-// PodcastsPage.js
 import React, { useState } from 'react';
 import Header from '../components/common/Header';
 import InputComponent from '../components/common/InputComponent';
+import AudioPlayer from '../components/common/AudioPlayer';  // Import the AudioPlayer component
 import '../components/common/Button/styles.css'; // Ensure you import the styles here
 
 const genres = [
@@ -20,6 +20,7 @@ function PodcastsPage() {
   const [search, setSearch] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [sortOption, setSortOption] = useState('');
+  const [currentPodcast, setCurrentPodcast] = useState({audioSrc: '', image: ''});  // State to manage the current playing podcast
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
@@ -31,6 +32,11 @@ function PodcastsPage() {
 
   const handleSortChange = (event) => {
     setSortOption(event.target.value);
+  };
+
+  // Function to play a podcast (This should be updated to the actual podcast data structure)
+  const playPodcast = (podcast) => {
+    setCurrentPodcast(podcast);
   };
 
   return (
@@ -45,7 +51,6 @@ function PodcastsPage() {
               setState={handleSearchChange}
               placeholder="Search By Title"
               type="text"
-              className="custom-input"
             />
           </div>
           <div className="dropdown-wrapper">
@@ -77,8 +82,28 @@ function PodcastsPage() {
           </select>
         </div>
       </div>
+      <div className="podcast-list">
+        {/* Example of rendering podcasts */}
+        {/* This should be replaced with your actual podcast rendering logic */}
+        {/** Replace the below section with your actual podcast data and mapping */}
+        {dummyPodcasts.map(podcast => (
+          <div key={podcast.id} onClick={() => playPodcast(podcast)}>
+            <img src={podcast.image} alt={podcast.title} />
+            <h2>{podcast.title}</h2>
+          </div>
+        ))}
+      </div>
+      {/* Add the AudioPlayer component here */}
+      <AudioPlayer audioSrc={currentPodcast.audioSrc} image={currentPodcast.image} />
     </div>
   );
 }
+
+// Example of dummy podcast data
+const dummyPodcasts = [
+  {id: 1, title: 'Podcast 1', image: 'path-to-image-1', audioSrc: 'path-to-audio-1'},
+  {id: 2, title: 'Podcast 2', image: 'path-to-image-2', audioSrc: 'path-to-audio-2'},
+  // Add more podcasts here
+];
 
 export default PodcastsPage;
