@@ -1,14 +1,21 @@
- import React from 'react';
- import './styles.css'; 
+import React from 'react';
+import './styles.css'; // Import the CSS styles for PodcastCard
 
- function PodcastCard(){
-
+const PodcastCard = ({ podcast }) => {
   return (
-      <div>
-        <h1>Hey</h1>
-       </div>
-  )
+    <div className="podcast-card">
+      <img src={podcast.image} alt={podcast.title} className="display-image-podcast" />
+      <div className="podcast-details">
+        <div className="title-and-season">
+          <h2 className="title-podcast">{podcast.title}</h2>
+          <p className="seasons">Seasons: {podcast.seasons}</p>
+        </div>
+        <div className="genres">
+          <p>Genres: {podcast.genres.join(', ')}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
- }
-
- export default PodcastCard;
+export default PodcastCard;
