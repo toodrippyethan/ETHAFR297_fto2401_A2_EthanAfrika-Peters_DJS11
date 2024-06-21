@@ -4,7 +4,7 @@ import Header from "../components/common/Header";
  function Home() {
   const [flag, setFlag] = useState(false);
 
-     return (
+     return ( 
     <div>
       <Header />
         <h1>Home</h1>
