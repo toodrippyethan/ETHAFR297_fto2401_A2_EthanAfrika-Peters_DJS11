@@ -11,6 +11,9 @@ Navigate into the project directory and install dependencies using npm install.
 Start the development server with npm start.
 Open your browser and go to http://localhost:3000 to access the application.
 
+npm install
+npm start
+
 Usage Example:
 
 Once the app is running, users can:
