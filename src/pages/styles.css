@@ -37,11 +37,11 @@
 }
 
 .sort-dropdown-wrapper {
-  width: 100%;
-  max-width: 600px; /* Adjust width as needed */
+  width: 12%;
+  max-width: 600px; 
   display: flex;
-  justify-content: center; /* Center items horizontally */
-  margin-bottom: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
 }
 
 .sort-dropdown-wrapper select {
@@ -56,6 +56,7 @@
 
 .sort-button {
   padding: 1rem 2rem;
+  margin-bottom: 2rem;
   font-size: 1rem;
   background-color: var(--purple-grey);
   color: var(--white);
@@ -74,29 +75,38 @@
 
 .filter-and-sort {
   display: flex;
-  justify-content: space-between; /* Arrange items with space between them */
-  align-items: center; /* Center items vertically */
-  width: 100%;
+  justify-content:space-between; 
+  margin-left: 2rem;
+ padding-bottom: 2rem;
+  align-items: center;
+  width: 40%;
   max-width: 600px;
 }
 
 .update-dropdown-wrapper,
 .genre-dropdown-wrapper {
-  width: calc(50% - 0.5rem); /* Adjust width to fit two buttons with a little space */
+  width: calc(70% - 1rem); 
 }
 
 @media (max-width: 768px) {
   .search-and-dropdown {
-    align-items: flex-start; /* Align items to the start on smaller screens */
+    align-items: flex-start; 
   }
 
   .filter-and-sort {
-    flex-direction: column; /* Stack items vertically on smaller screens */
+    flex-direction: column; 
+    
   }
+  
+  .sort-dropdown-wrapper{
+    width: 9rem;
+    margin-top: 1rem;
+  }
+  
 
   .update-dropdown-wrapper,
   .genre-dropdown-wrapper {
-    width: 100%; /* Full width for dropdowns on smaller screens */
+    width: 100%; 
     margin-bottom: 1rem;
   }
 }

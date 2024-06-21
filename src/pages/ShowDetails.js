@@ -19,7 +19,7 @@ const ShowDetails = () => {
         }
         const showData = await response.json();
         setSelectedShow(showData);
-        setSelectedSeason(showData.seasons[0]); // Default to first season
+        setSelectedSeason(showData.seasons[1]); // Default to first season
         setLoading(false);
       } catch (error) {
         console.error('Error fetching show details:', error);

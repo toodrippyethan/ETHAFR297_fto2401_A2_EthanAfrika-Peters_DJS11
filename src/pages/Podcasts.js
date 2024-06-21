@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import InputComponent from '../components/common/InputComponent';
 import AudioPlayer from '../components/common/AudioPlayer';
@@ -133,8 +133,8 @@ const PodcastsPage = () => {
         <div className="search-and-dropdown">
           <div className="search-input">
             <InputComponent
-              state={search}
-              setState={handleSearchChange}
+              value={search}
+              onChange={handleSearchChange}
               placeholder="Search By Title"
               type="text"
             />
@@ -147,7 +147,6 @@ const PodcastsPage = () => {
               onChange={handleSortChange}
               className="dropdown-select"
             >
-              <option value="az">Sort By</option>
               <option value="az">A-Z</option>
               <option value="za">Z-A</option>
             </select>

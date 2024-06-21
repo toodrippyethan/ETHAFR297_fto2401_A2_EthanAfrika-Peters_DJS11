@@ -1,12 +1,11 @@
 import React from 'react';
-import './Button/styles.css'; 
 
-const InputComponent = ({ state, setState, placeholder, type }) => {
+const InputComponent = ({ value, onChange, placeholder, type }) => {
   return (
     <input
       className="custom-input"
-      value={state}
-      onChange={(e) => setState(e.target.value)}
+      value={value}
+      onChange={onChange}
       placeholder={placeholder}
       type={type}
     />
