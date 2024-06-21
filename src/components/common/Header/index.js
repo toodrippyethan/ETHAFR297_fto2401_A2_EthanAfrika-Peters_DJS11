@@ -10,13 +10,9 @@ return <div className="navbar">
 <div className="links">
 <div className="gradient"></div>
 <Link to="/podcasts" className={currentPath == "/" ? "active" : ""}>
-Home
 </Link>
 <Link to="/podcasts" className={currentPath == "/podcasts" ? "active" : ""}>
 Podcasts
-</Link>
-<Link to="/favorites" className={currentPath == "/favorites" ? "active" : ""}>
-Favorites
 </Link>
 <Link to="/profile" className={currentPath == "/profile" ? "active" : ""}>
 Profile

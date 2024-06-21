@@ -1,4 +1,5 @@
 import React from 'react';
+import Header from './common/Header';
 
 const PodcastDetails = ({ episode, onAddToFavorites, onRemoveFromFavorites }) => {
   const handleAddToFavorites = () => {
@@ -11,6 +12,7 @@ const PodcastDetails = ({ episode, onAddToFavorites, onRemoveFromFavorites }) =>
 
   return (
     <div className="podcast-details">
+      <Header />
       <h3>{episode.title}</h3>
       <p>Season: {episode.season}</p>
       <p>Show: {episode.show}</p>

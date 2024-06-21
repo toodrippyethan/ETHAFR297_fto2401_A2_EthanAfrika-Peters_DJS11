@@ -7,7 +7,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import Header from '../components/common/Header';
 import InputComponent from '../components/common/InputComponent';
 import PodcastCard from '../components/common/PodcastCard';
-import Favorites from './Favorites'; // Assuming Favorites component is in the same directory
 import './styles.css';
 
 const PodcastsPage = () => {
@@ -216,7 +215,6 @@ const PodcastsPage = () => {
           />
         ))}
       </div>
-      <Favorites favorites={favorites} removeFromFavorites={removeFromFavorites} showHeader={false} />
     </div>
   );
 };
