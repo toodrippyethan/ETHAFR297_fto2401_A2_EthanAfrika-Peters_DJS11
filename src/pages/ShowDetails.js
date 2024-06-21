@@ -18,7 +18,7 @@ const ShowDetails = () => {
       try {
         const response = await fetch(`https://podcast-api.netlify.app/id/${showid}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch show details');
+          throw new Error(`Failed to fetch show details: ${response.status} ${response.statusText}`);
         }
         const showData = await response.json();
         // Assigning season numbers ourselves
@@ -45,7 +45,7 @@ const ShowDetails = () => {
     try {
       const response = await fetch(`https://podcast-api.netlify.app/season/${seasonId}/episodes`);
       if (!response.ok) {
-        throw new Error('Failed to fetch season episodes');
+        throw new Error(`Failed to fetch season episodes: ${response.status} ${response.statusText}`);
       }
       const episodesData = await response.json();
       setSelectedSeason(prevSeason => ({

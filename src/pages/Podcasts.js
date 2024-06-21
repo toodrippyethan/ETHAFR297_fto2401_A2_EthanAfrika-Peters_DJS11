@@ -215,7 +215,7 @@ const PodcastsPage = () => {
           />
         ))}
       </div>
-      <Favorites favorites={favorites} removeFromFavorites={removeFromFavorites} />
+      <Favorites favorites={favorites} removeFromFavorites={removeFromFavorites} showHeader={false} />
     </div>
   );
 };

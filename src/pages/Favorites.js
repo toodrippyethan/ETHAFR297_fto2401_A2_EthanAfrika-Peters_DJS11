@@ -1,18 +1,21 @@
+// Favorites.js
 import React from 'react';
 
-const Favorites = ({ favorites, removeFromFavorites }) => {
-  if (!favorites || favorites.length === 0) {
-    return <div>No favorites selected yet.</div>;
-  }
-
+const Favorites = ({ favorites, removeFromFavorites, showHeader = true }) => {
   return (
     <div className="favorites">
-      <h2>Favorite Episodes</h2>
+      {showHeader && (
+        <h2>Favorite Episodes</h2>
+      )}
       <ul>
-        {favorites.map((favorite, index) => (
-          <li key={index}>
-            {favorite.episode.title} {/* Assuming episode has a 'title' property */}
-            <button onClick={() => removeFromFavorites(favorite.episode)}>Remove</button>
+        {favorites.map((favorite) => (
+          <li key={favorite.podcast.id}>
+            <div>
+              <h3>{favorite.podcast.title}</h3>
+              <button onClick={() => removeFromFavorites(favorite.podcast)}>
+                Remove from Favorites
+              </button>
+            </div>
           </li>
         ))}
       </ul>

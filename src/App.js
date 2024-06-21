@@ -10,7 +10,6 @@ import AudioPlayer from './components/common/AudioPlayer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ShowDetailsPage from './pages/ShowDetails'; // Ensure this import is correct
-import PodcastsPage from './pages/Podcasts';
 
 function App() {
   return (
@@ -25,7 +24,7 @@ function App() {
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/podcasts" element={<Podcasts />} />
             <Route path="/show/:showid" element={<ShowDetails />} />
-            <Route path="/podcasts/:showid" element={<ShowDetailsPage />} />
+            <Route path="/podcasts/:seasonId" element={<ShowDetailsPage />} />
           </Route>
         </Routes>
       </Router>

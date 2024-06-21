@@ -8,6 +8,7 @@ function AudioPlayer({ audioSrc, image }) {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [audioPlaying, setAudioPlaying] = useState(false); // Track audio playing state
   const audioRef = useRef();
 
   const togglePlay = () => {
@@ -60,14 +61,33 @@ function AudioPlayer({ audioSrc, image }) {
       audioRef.current.play().catch((error) => {
         console.error("Failed to play:", error);
       });
+      setAudioPlaying(true);
     } else {
       audioRef.current.pause();
+      setAudioPlaying(false);
     }
   }, [isPlaying]);
 
   useEffect(() => {
     audioRef.current.volume = isMute ? 0 : volume;
   }, [isMute, volume]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (audioPlaying) {
+        const message = "Audio is currently playing. Are you sure you want to leave?";
+        event.preventDefault();
+        event.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [audioPlaying]);
 
   return (
     <div className="custom-audio-player">
