@@ -1,66 +1,143 @@
 .custom-btn {
-    text-align: center;
-    border: 2px solid var(--white);
-    padding: 1rem;
-    border-radius: 0.35rem;
-    cursor: pointer;
-    width: 70vw;
-    margin: 1rem;
-    font-size: 1rem;
-    font-weight: 500;
-  }
-  
-  .custom-btn:hover {
-    background-color: var(--white);
-    color: var(--theme);
-    transition: all 0.2s;
-  }
-  
-  .input-wrapper {
-    margin-top: 2rem;
-  }
-  
-  .search-and-dropdown {
-    display: flex;
-    align-items: center;
-  }
-  
-  .search-input {
-    flex: 1; /* Take up remaining space */
-  }
-  
-  .dropdown-wrapper {
-    margin-right: 12px; /* Adjust margin between dropdowns */
-  }
-  
-  .dropdown-select {
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-  }
-  
-  .dropdown-select:focus {
-    outline: none;
-    border-color: #007bff; /* Example focus color */
-  }
-  
-  .podcasts-flex {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px; /* Adjust gap between podcast cards */
-    justify-content: flex-start;
-    margin-top: 1.5rem;
-  }
-  
-  .dropdown-wrapper label {
-    margin-right: 8px; /* Adjust margin between label and dropdown */
-  }
-  
-  .dropdown-wrapper:nth-child(3) {
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 1rem;
-  }
-  
+  text-align: center;
+  border: 2px solid var(--white);
+  padding: 1rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  width: 70vw;
+  margin: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.custom-btn:hover {
+  background-color: var(--white);
+  color: var(--theme);
+  transition: all 0.2s;
+}
+
+.input-wrapper {
+  margin-top: 2rem;
+}
+
+.search-and-dropdown {
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1; /* Take up remaining space */
+}
+
+.dropdown-wrapper {
+  margin-right: 12px; /* Adjust margin between dropdowns */
+}
+
+.dropdown-select {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.dropdown-select:focus {
+  outline: none;
+  border-color: #007bff; /* Example focus color */
+}
+
+.podcasts-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Adjust gap between podcast cards */
+  justify-content: flex-start;
+  margin-top: 1.5rem;
+}
+
+.dropdown-wrapper label {
+  margin-right: 8px; /* Adjust margin between label and dropdown */
+}
+
+.dropdown-wrapper:nth-child(3) {
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 1rem;
+}
+
+/* styles.css */
+
+.custom-input {
+  background-color: var(--theme);
+  color: var(--white);
+  border: 2px solid var(--purple-grey);
+  border-radius: 0.35rem;
+  padding: 1rem;
+  font-size: 1rem;
+  width: 100%;
+  font-weight: 500;
+  margin: 1rem;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: var(--white);
+}
+
+.custom-input::placeholder {
+  color: var(--purple-grey);
+}
+
+.label-input {
+  color: var(--purple-grey);
+}
+
+.active {
+  border-color: var(--white);
+}
+
+.dropdown-select {
+  background-color: var(--theme);
+  color: var(--white);
+  border: 2px solid var(--purple-grey);
+  border-radius: 0.35rem;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 1rem;
+  width: auto;
+}
+
+.dropdown-select:focus {
+  outline: none;
+  border-color: var(--white);
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.search-and-dropdown {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.search-input,
+.dropdown-wrapper {
+  display: flex;
+  align-items: center;
+  margin: 1rem;
+}
+
+.search-input {
+  flex-grow: 1;
+}
+
+.dropdown-wrapper.center {
+  justify-content: center;
+  width: 20%;
+}
