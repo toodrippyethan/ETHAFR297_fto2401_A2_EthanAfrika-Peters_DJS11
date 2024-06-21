@@ -6,7 +6,7 @@ import Loader from '../components/common/Loader'; // Adjust path as per your fil
 import './styles.css';
 import Header from '../components/common/Header';
 
-const ShowDetails = () => {
+const ShowDetails = () => { 
   const { showid } = useParams();
   const [selectedShow, setSelectedShow] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState(null);
