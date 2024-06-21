@@ -144,8 +144,8 @@
 
 .episode-list ul li {
   cursor: pointer;
-  padding: 8px;
-  border-bottom: 1px solid #ccc;
+  padding: 0x;
+  border-bottom: 1px solid #907c7c;
 }
 
 .episode-list ul li:hover {

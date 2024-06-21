@@ -19,6 +19,7 @@ function App() {
       <Router>
         <AudioPlayer /> {/* AudioPlayer always visible */}
         <Routes>
+        <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route element={<PrivateRoutes />}>
             <Route path="/profile" element={<Profile />} />

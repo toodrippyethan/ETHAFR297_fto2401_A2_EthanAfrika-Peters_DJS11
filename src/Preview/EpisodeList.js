@@ -7,7 +7,7 @@ const EpisodeList = ({ episodes, onEpisodeSelect }) => {
       <ul>
         {episodes.map(episode => (
           <li key={episode.id} onClick={() => onEpisodeSelect(episode)}>
-            {episode.name}
+            {episode.name} {/* Ensure 'name' is the correct property */}
           </li>
         ))}
       </ul>
