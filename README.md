@@ -7,11 +7,18 @@ Setup Instructions:
 To get started with the Podcast App, follow these steps:
 
 Clone the repository from GitHub to your local machine
-Navigate into the project directory and install dependencies using npm install.
-Start the development server with npm start.
+
+Navigate into the project directory and install dependencies using
+
+ npm install --force.
+
+Start the development server with 
+
+npm start.
+
 Open your browser and go to http://localhost:3000 to access the application.
 
-npm install
+npm install --force
 npm start
 
 Usage Example:
