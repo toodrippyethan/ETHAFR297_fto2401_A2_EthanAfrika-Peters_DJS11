@@ -1,6 +1,5 @@
-// InputComponent.js
 import React from 'react';
-import './Button/styles.css'; // Import your CSS file for styles
+import './Button/styles.css'; 
 
 const InputComponent = ({ state, setState, placeholder, type }) => {
   return (

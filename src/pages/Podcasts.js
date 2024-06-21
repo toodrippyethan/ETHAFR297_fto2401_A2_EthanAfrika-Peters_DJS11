@@ -45,6 +45,7 @@ function PodcastsPage() {
               setState={handleSearchChange}
               placeholder="Search By Title"
               type="text"
+              className="custom-input"
             />
           </div>
           <div className="dropdown-wrapper">
