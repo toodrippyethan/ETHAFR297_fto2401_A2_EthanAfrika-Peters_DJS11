@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import EpisodeList from '../Preview//EpisodeList';
+import EpisodeList from '../Preview/EpisodeList';
 import AudioPlayer from '../components/common/AudioPlayer';
 import Header from '../components/common/Header';
 import './styles.css';
@@ -53,32 +53,45 @@ const ShowDetails = () => {
         <>
           <h2>{selectedShow.title}</h2>
           <div className="season-preview">
-            {selectedShow.seasons.map(season => (
-              <button key={season.number} onClick={() => handleSeasonSelect(season.number)}>
-                <img src={season.image} alt={`Season ${season.number}`} />
-                <p>Season {season.number}</p>
-                <p>{season.episodes.length} Episodes</p>
-              </button>
-            ))}
+            {/* Dropdown to select seasons */}
+            <select
+              value={selectedSeason ? selectedSeason.number : ''}
+              onChange={(e) => handleSeasonSelect(Number(e.target.value))}
+            >
+              {selectedShow.seasons.map(season => (
+                <option key={season.number} value={season.number}>
+                  Season {season.number}
+                </option>
+              ))}
+            </select>
           </div>
           {selectedSeason && (
             <>
               <h3>Season {selectedSeason.number}</h3>
-              <img src={selectedSeason.image} alt={`Season ${selectedSeason.number}`} className="selected-season-image" />
-              <EpisodeList
-                episodes={selectedSeason.episodes}
-                onEpisodeSelect={handleEpisodeSelect}
+              <img
+                src={selectedSeason.image}
+                alt={`Season ${selectedSeason.number}`}
+                className="selected-season-image"
               />
+              <p>{selectedSeason.description}</p>
+              {/* List of episodes */}
+              <ul>
+                {selectedSeason.episodes.map((episode, index) => (
+                  <li key={index} onClick={() => handleEpisodeSelect(episode)}>
+                    {episode.title}
+                  </li>
+                ))}
+              </ul>
+              {/* Audio player for selected episode */}
+              {selectedEpisode && (
+                <AudioPlayer audioSrc={selectedEpisode.audioSrc} image={selectedShow.image} />
+              )}
             </>
-          )}
-          {selectedEpisode && (
-            <AudioPlayer audioSrc={selectedEpisode.audioSrc} image={selectedShow.image} />
           )}
         </>
       ) : (
         <div>Error</div>
       )}
-     
     </div>
   );
 };
