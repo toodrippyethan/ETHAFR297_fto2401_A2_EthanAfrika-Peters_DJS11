@@ -232,3 +232,76 @@ a {
   font-size: 1rem;
   color: var(--white);
 }
+
+
+.show-details-page {
+  padding: 20px;
+}
+
+.season-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.season-preview button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+.season-preview img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.episode-list {
+  margin-top: 20px;
+}
+
+.episode-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.episode-list li {
+  margin-bottom: 10px;
+}
+
+.episode-list button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
+.custom-audio-player {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.display-image-player {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.duration-flex {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.audio-btn {
+  cursor: pointer;
+}
+
+.duration-range,
+.volume-range {
+  width: 100px;
+}

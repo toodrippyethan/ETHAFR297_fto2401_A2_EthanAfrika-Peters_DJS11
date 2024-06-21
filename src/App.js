@@ -1,5 +1,3 @@
-// App.js
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
@@ -12,6 +10,7 @@ import PrivateRoutes from './components/common/PrivateRoutes';
 import AudioPlayer from './components/common/AudioPlayer';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ShowDetailsPage from './pages/ShowDetails'; // Ensure this import is correct
 
 function App() {
   return (
@@ -25,7 +24,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/favorite" element={<Favorite />} />
             <Route path="/podcasts" element={<Podcasts />} />
-            <Route path="/show/:id" element={<ShowDetails />} />
+            <Route path="/show/:showid" element={<ShowDetails />} />
+            <Route path="/podcasts/:showid" element={<ShowDetailsPage />} />
           </Route>
         </Routes>
       </Router>

@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/common/Header';
 import InputComponent from '../components/common/InputComponent';
 import AudioPlayer from '../components/common/AudioPlayer';
 import PodcastCard from '../components/common/PodcastCard';
+import ShowPreview from '../Preview/ShowPreview';
+import SeasonSelector from '../Preview/SeasonSelector';
+import EpisodeList from '../Preview/EpisodeList';
 import './styles.css';
 
 const PodcastsPage = () => {
@@ -11,48 +15,54 @@ const PodcastsPage = () => {
   const [sortOption, setSortOption] = useState('az');
   const [podcasts, setPodcasts] = useState([]);
   const [currentPodcast, setCurrentPodcast] = useState({ audioSrc: '', image: '' });
+  const [selectedShow, setSelectedShow] = useState(null);
+  const [selectedSeason, setSelectedSeason] = useState(null);
+  const navigate = useNavigate(); // Hook for programmatic navigation
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('https://podcast-api.netlify.app');
-      const data = await response.json();
-      setPodcasts(data);
+      try {
+        const response = await fetch('https://podcast-api.netlify.app');
+        if (!response.ok) {
+          throw new Error('Failed to fetch podcasts');
+        }
+        const data = await response.json();
+
+        const formattedPodcasts = data.map(podcast => ({
+          ...podcast,
+          updated: new Date(podcast.updated).toLocaleDateString('en-US', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          }),
+          genres: podcast.genres.map(genreId => {
+            return fetch(`https://podcast-api.netlify.app/genre/${genreId}`)
+              .then(response => response.json())
+              .then(genreData => genreData.title)
+              .catch(error => {
+                console.error('Error fetching genre:', error);
+                return 'Unknown Genre';
+              });
+          })
+        }));
+
+        Promise.all(formattedPodcasts.map(podcast =>
+          Promise.all(podcast.genres)
+            .then(genres => ({
+              ...podcast,
+              genres
+            }))
+        ))
+          .then(updatedPodcasts => {
+            setPodcasts(updatedPodcasts);
+          });
+      } catch (error) {
+        console.error('Error fetching podcasts:', error);
+      }
     };
 
     fetchData();
   }, []);
-
-  useEffect(() => {
-    const fetchPodcastDetails = async () => {
-      // Map through each podcast and fetch genre details for each genre ID
-      const updatedPodcasts = await Promise.all(
-        podcasts.map(async (podcast) => {
-          const updatedGenres = await Promise.all(
-            podcast.genres.map(async (genreId) => {
-              const genreResponse = await fetch(`https://podcast-api.netlify.app/genre/${genreId}`);
-              const genreData = await genreResponse.json();
-              return genreData.title; // Assuming genreData.title contains the genre title
-            })
-          );
-
-          // Format the 'updated' field into a readable date format
-          const updatedDate = new Date(podcast.updated);
-          const monthNames = [
-            'January', 'February', 'March',
-            'April', 'May', 'June', 'July',
-            'August', 'September', 'October',
-            'November', 'December'
-          ];
-          const readableUpdated = `${updatedDate.getDate()} ${monthNames[updatedDate.getMonth()]} ${updatedDate.getFullYear()}`;
-
-          return { ...podcast, genres: updatedGenres, readableUpdated };
-        })
-      );
-      setPodcasts(updatedPodcasts);
-    };
-
-    fetchPodcastDetails();
-  }, [podcasts]);
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
@@ -66,8 +76,28 @@ const PodcastsPage = () => {
     setSortOption(event.target.value);
   };
 
+  const handleSortByUpdate = (event) => {
+    const sortBy = event.target.value;
+    const sortedPodcasts = [...podcasts].sort((a, b) => {
+      const dateA = new Date(a.updated);
+      const dateB = new Date(b.updated);
+      if (sortBy === 'most-recent') {
+        return dateB - dateA;
+      } else if (sortBy === 'least-recent') {
+        return dateA - dateB;
+      }
+      return 0;
+    });
+    setPodcasts(sortedPodcasts);
+  };
+
   const playPodcast = (podcast) => {
     setCurrentPodcast(podcast);
+  };
+
+  const clearSelection = () => {
+    setSelectedShow(null);
+    setSelectedSeason(null);
   };
 
   const sortedPodcasts = [...podcasts].sort((a, b) => {
@@ -86,6 +116,15 @@ const PodcastsPage = () => {
     );
   });
 
+  const handleShowSelect = (show) => {
+    setSelectedShow(show);
+    navigate(`/show/${show.id}`); // Navigate to show details page
+  };
+
+  const handleSeasonSelect = (season) => {
+    setSelectedSeason(season);
+  };
+
   return (
     <div>
       <Header />
@@ -100,7 +139,7 @@ const PodcastsPage = () => {
               type="text"
             />
           </div>
-          <div className="dropdown-wrapper">
+          <div className="sort-dropdown-wrapper">
             <label htmlFor="sortDropdown" className="label-input">Sort By</label>
             <select
               id="sortDropdown"
@@ -108,45 +147,63 @@ const PodcastsPage = () => {
               onChange={handleSortChange}
               className="dropdown-select"
             >
+              <option value="az">Sort By</option>
               <option value="az">A-Z</option>
               <option value="za">Z-A</option>
             </select>
           </div>
-        </div>
-        <div className="dropdown-wrapper center">
-          <label htmlFor="genreDropdown" className="label-input">Filter By Genre</label>
-          <select
-            id="genreDropdown"
-            value={selectedGenre}
-            onChange={handleGenreChange}
-            className="dropdown-select"
-          >
-            <option value="">All Genres</option>
-            <option value="Personal Growth">Personal Growth</option>
-            <option value="Investigative Journalism">Investigative Journalism</option>
-            <option value="History">History</option>
-            <option value="Comedy">Comedy</option>
-            <option value="Entertainment">Entertainment</option>
-            <option value="Business">Business</option>
-            <option value="Fiction">Fiction</option>
-            <option value="News">News</option>
-            <option value="Kids and Family">Kids and Family</option>
-          </select>
+          <div className="filter-and-sort">
+            <div className="genre-dropdown-wrapper">
+              <label htmlFor="genreDropdown" className="label-input">Filter By Genre</label>
+              <select
+                id="genreDropdown"
+                value={selectedGenre}
+                onChange={handleGenreChange}
+                className="dropdown-select"
+              >
+                <option value="">All Genres</option>
+                <option value="Personal Growth">Personal Growth</option>
+                <option value="Investigative Journalism">Investigative Journalism</option>
+                <option value="History">History</option>
+                <option value="Comedy">Comedy</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Business">Business</option>
+                <option value="Fiction">Fiction</option>
+                <option value="News">News</option>
+                <option value="Kids and Family">Kids and Family</option>
+              </select>
+            </div>
+            <div className="update-dropdown-wrapper">
+              <label htmlFor="updateDropdown" className="label-input">Sort By Update</label>
+              <select
+                id="updateDropdown"
+                className="dropdown-select"
+                onChange={handleSortByUpdate}
+              >
+                <option value="most-recent">Newly Updated Shows</option>
+                <option value="least-recent">Oldest Updated Shows</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
       <div className="podcast-list">
         {filteredPodcasts.map(podcast => (
-          <div key={podcast.id} className="podcast-card" onClick={() => playPodcast(podcast)}>
-            <img src={podcast.image} alt={podcast.title} className="display-image-podcast" />
-            <div className="podcast-details">
-              <h2 className="title-podcast">{podcast.title}</h2>
-              <p className="genres">Genres: {podcast.genres.join(', ')}</p>
-              <p className="seasons">Seasons: {podcast.seasons}</p>
-              <p className="updated">Last Updated: {podcast.readableUpdated}</p>
-            </div>
-          </div>
+          <Link key={podcast.id} to={`/show/${podcast.id}`}>
+            <PodcastCard podcast={podcast} onClick={() => handleShowSelect(podcast)} />
+          </Link>
         ))}
       </div>
+      {selectedShow && (
+        <div className="show-details">
+          <h2>{selectedShow.title} Seasons</h2>
+          <ShowPreview images={selectedShow.seasonImages} />
+          <SeasonSelector seasons={selectedShow.seasons} onSelectSeason={handleSeasonSelect} />
+          {selectedSeason && (
+            <EpisodeList episodes={selectedShow.episodes[selectedSeason - 1]} />
+          )}
+        </div>
+      )}
       <AudioPlayer audioSrc={currentPodcast.audioSrc} image={currentPodcast.image} />
     </div>
   );

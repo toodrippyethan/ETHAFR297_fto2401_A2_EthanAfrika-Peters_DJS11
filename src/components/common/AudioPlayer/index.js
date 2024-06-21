@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
-import "../../../index.css";
 import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
+import "../../../index.css";
 
 function AudioPlayer({ audioSrc, image }) {
   const [isPlaying, setIsPlaying] = useState(true);

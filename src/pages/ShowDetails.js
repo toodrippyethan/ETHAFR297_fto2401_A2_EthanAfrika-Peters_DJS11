@@ -1,45 +1,77 @@
-// ShowDetails.js
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchShowById } from '../services/apiService';
+import EpisodeList from '../Preview/EpisodeList';
+import AudioPlayer from '../components/common/AudioPlayer';
+import '../index.css';
 
 const ShowDetails = () => {
-  const { id } = useParams();
-  const [show, setShow] = useState(null);
+  const { showid } = useParams();
+  const [selectedShow, setSelectedShow] = useState(null);
+  const [selectedSeason, setSelectedSeason] = useState(null);
+  const [selectedEpisode, setSelectedEpisode] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchShow = async () => {
+    const fetchShowDetails = async () => {
       try {
-        const data = await fetchShowById(id);
-        setShow(data);
+        const response = await fetch(`https://podcast-api.netlify.app/id/${showid}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch show details');
+        }
+        const showData = await response.json();
+        setSelectedShow(showData);
+        setSelectedSeason(showData.seasons[0]); // Default to first season
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching show details:', error);
+        setLoading(false);
       }
     };
 
-    fetchShow();
-  }, [id]);
+    fetchShowDetails();
+  }, [showid]);
 
-  if (!show) {
+  const handleSeasonSelect = (seasonNumber) => {
+    const season = selectedShow.seasons.find(s => s.number === seasonNumber);
+    setSelectedSeason(season);
+    setSelectedEpisode(null);
+  };
+
+  const handleEpisodeSelect = (episode) => {
+    setSelectedEpisode(episode);
+  };
+
+  if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div>
-      <h1>{show.title}</h1>
-      <img src={show.image} alt={show.title} />
-      <p>Description: {show.description}</p>
-      <p>Genres: {show.genres.join(', ')}</p>
-      <h2>Seasons:</h2>
-      <ul>
-        {show.seasons.map(season => (
-          <li key={season.id}>
-            <h3>Season {season.number}</h3>
-            <p>Number of Episodes: {season.episodes.length}</p>
-          </li>
-        ))}
-      </ul>
+    <div className="show-details-page">
+      {selectedShow ? (
+        <>
+          <h2>{selectedShow.title}</h2>
+          <div className="season-preview">
+            {selectedShow.seasons.map(season => (
+              <button key={season.number} onClick={() => handleSeasonSelect(season.number)}>
+                <img src={season.image} alt={`Season ${season.number}`} />
+                <p>Season {season.number}</p>
+                <p>{season.episodes.length} Episodes</p>
+              </button>
+            ))}
+          </div>
+          {selectedSeason && (
+            <EpisodeList
+              episodes={selectedSeason.episodes}
+              onEpisodeSelect={handleEpisodeSelect}
+            />
+          )}
+          {selectedEpisode && (
+            <AudioPlayer audioSrc={selectedEpisode.audioSrc} image={selectedShow.image} />
+          )}
+        </>
+      ) : (
+        <div>Loading...</div>
+      )}
     </div>
   );
 };
