@@ -2,3 +2,4 @@
   base = "ETHAFR297_fto2401_A2_EthanAfrika-Peters_DJS11"
   command = "npm run build"
   publish = "build"
+ 
