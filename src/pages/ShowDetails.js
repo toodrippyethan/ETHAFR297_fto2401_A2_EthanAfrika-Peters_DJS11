@@ -21,6 +21,11 @@ const ShowDetails = () => {
           throw new Error('Failed to fetch show details');
         }
         const showData = await response.json();
+        // Assigning season numbers ourselves
+        showData.seasons = showData.seasons.map((season, index) => ({
+          ...season,
+          number: index + 1,
+        }));
         setSelectedShow(showData);
         setSelectedSeason(showData.seasons[0]); // Default to first season
         setLoading(false);
@@ -56,6 +61,10 @@ const ShowDetails = () => {
 
   const handleSeasonSelect = async (seasonNumber) => {
     const season = selectedShow.seasons.find(s => s.number === seasonNumber);
+    if (!season) {
+      console.error('Selected season not found');
+      return;
+    }
     setSelectedSeason(season);
     setSelectedEpisode(null);
 
@@ -101,11 +110,15 @@ const ShowDetails = () => {
                 <div className="episode-list">
                   <h4>Episodes:</h4>
                   <ul>
-                    {selectedSeason.episodes && selectedSeason.episodes.map(episode => (
-                      <li key={episode.id} onClick={() => handleEpisodeSelect(episode)}>
-                        {episode.name} {/* Adjust property based on your data */}
-                      </li>
-                    ))}
+                    {selectedSeason.episodes && selectedSeason.episodes.length > 0 ? (
+                      selectedSeason.episodes.map(episode => (
+                        <li key={episode.id} onClick={() => handleEpisodeSelect(episode)}>
+                          {episode.name} {/* Adjust property based on your data */}
+                        </li>
+                      ))
+                    ) : (
+                      <li>No episodes available for this season</li>
+                    )}
                   </ul>
                 </div>
               )}
