@@ -148,17 +148,17 @@
 }
 
 .episode-list ul {
-  list-style-type: none;
+  list-style-type:circle;
   padding: 0;
-}
+} 
 
 .episode-list ul li {
   cursor: pointer;
-  padding: 0x;
+  padding: 1rem;
   border-bottom: 1px solid #907c7c;
 }
 
 .episode-list ul li:hover {
-  background-color: #f0f0f0;
+  background-color: #696363;
 }
 

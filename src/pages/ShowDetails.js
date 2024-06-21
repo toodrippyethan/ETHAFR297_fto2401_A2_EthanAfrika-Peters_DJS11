@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import AudioPlayer from '../components/common/AudioPlayer'; // Assuming you have this component
+import Loader from '../components/common/Loader'; // Adjust path as per your file structure
 import './styles.css';
+import Header from '../components/common/Header';
 
 const ShowDetails = () => {
   const { showid } = useParams();
@@ -9,6 +11,7 @@ const ShowDetails = () => {
   const [selectedSeason, setSelectedSeason] = useState(null);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [seasonLoading, setSeasonLoading] = useState(false); // State for season episodes loading
 
   useEffect(() => {
     const fetchShowDetails = async () => {
@@ -19,8 +22,9 @@ const ShowDetails = () => {
         }
         const showData = await response.json();
         setSelectedShow(showData);
-        setSelectedSeason(showData.seasons[1]); // Default to first season
+        setSelectedSeason(showData.seasons[0]); // Default to first season
         setLoading(false);
+        fetchSeasonEpisodes(showData.seasons[0].id); // Fetch episodes for the first season by default
       } catch (error) {
         console.error('Error fetching show details:', error);
         setLoading(false);
@@ -30,10 +34,33 @@ const ShowDetails = () => {
     fetchShowDetails();
   }, [showid]);
 
-  const handleSeasonSelect = (seasonNumber) => {
+  const fetchSeasonEpisodes = async (seasonId) => {
+    setSeasonLoading(true); // Set loading state for season episodes fetch
+
+    try {
+      const response = await fetch(`https://podcast-api.netlify.app/season/${seasonId}/episodes`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch season episodes');
+      }
+      const episodesData = await response.json();
+      setSelectedSeason(prevSeason => ({
+        ...prevSeason,
+        episodes: episodesData // Assuming episodesData is an array of episode objects
+      }));
+    } catch (error) {
+      console.error('Error fetching season episodes:', error);
+    }
+
+    setSeasonLoading(false); // Clear loading state after fetch
+  };
+
+  const handleSeasonSelect = async (seasonNumber) => {
     const season = selectedShow.seasons.find(s => s.number === seasonNumber);
     setSelectedSeason(season);
     setSelectedEpisode(null);
+
+    // Fetch season episodes for the selected season
+    await fetchSeasonEpisodes(season.id);
   };
 
   const handleEpisodeSelect = (episode) => {
@@ -41,11 +68,12 @@ const ShowDetails = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />; // Display loader for initial loading
   }
 
   return (
     <div className="show-details-page">
+      <Header />
       {selectedShow ? (
         <>
           <h2>{selectedShow.title}</h2>
@@ -66,20 +94,29 @@ const ShowDetails = () => {
             <>
               <h3>Season {selectedSeason.number}</h3>
               <img src={selectedSeason.image} alt={`Season ${selectedSeason.number}`} className="selected-season-image" />
-              <div className="episode-list">
-                <h4>Episodes:</h4>
-                <ul>
-                  {selectedSeason.episodes.map(episode => (
-                    <li key={episode.id} onClick={() => handleEpisodeSelect(episode)}>
-                      {episode.name} {/* Adjust property based on your data */}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <p>Number of Episodes: {selectedSeason.episodes ? selectedSeason.episodes.length : 0}</p>
+              {seasonLoading ? (
+                <Loader /> // Display loader while fetching season episodes
+              ) : (
+                <div className="episode-list">
+                  <h4>Episodes:</h4>
+                  <ul>
+                    {selectedSeason.episodes && selectedSeason.episodes.map(episode => (
+                      <li key={episode.id} onClick={() => handleEpisodeSelect(episode)}>
+                        {episode.name} {/* Adjust property based on your data */}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </>
           )}
           {selectedEpisode && (
-            <AudioPlayer audioSrc={selectedEpisode.audioSrc} image={selectedShow.image} />
+            <div className="selected-episode">
+              <h4>Selected Episode:</h4>
+              <p>{selectedEpisode.name}</p>
+              <AudioPlayer audioSrc={selectedEpisode.audioSrc} image={selectedShow.image} />
+            </div>
           )}
         </>
       ) : (
