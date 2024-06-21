@@ -7,30 +7,22 @@ Setup Instructions:
 To get started with the Podcast App, follow these steps:
 
 Clone the repository from GitHub to your local machine
-.
 Navigate into the project directory and install dependencies using npm install.
-
 Start the development server with npm start.
-
 Open your browser and go to http://localhost:3000 to access the application.
 
 Usage Example:
 
 Once the app is running, users can:
+
 Browse through a list of available shows, sorted alphabetically by default.
-
 Click on a show to view its details, including associated genres, seasons, and episodes.
-
 Listen to episodes directly within the app's integrated audio player.
-
 Filter shows by genre to discover podcasts in specific categories.
-
 Manage favorite episodes for quick access later.
 
 
 Contact Information:
-
-Contact Information
 
 For any questions, suggestions, or feedback, please reach out to 
 Ethan Kyle Afrika-peters
