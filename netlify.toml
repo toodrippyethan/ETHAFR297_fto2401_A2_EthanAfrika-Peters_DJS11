@@ -2,3 +2,6 @@
   base = "ETHAFR297_fto2401_A2_EthanAfrika-Peters_DJS11"
   publish = "ETHAFR297_fto2401_A2_EthanAfrika-Peters_DJS11/build"
   command = "npm run build"
+
+  [context.production.environment]
+  NODE_VERSION = "14"
