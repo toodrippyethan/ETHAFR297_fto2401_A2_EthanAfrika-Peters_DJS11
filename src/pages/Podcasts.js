@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/common/Header';
 import InputComponent from '../components/common/InputComponent';
-import AudioPlayer from '../components/common/AudioPlayer';  // Import the AudioPlayer component
-import PodcastCard from '../components/common/PodcastCard';  // Import the PodcastCard component
-import './styles.css'; // Ensure you import the styles here
+import AudioPlayer from '../components/common/AudioPlayer';
+import PodcastCard from '../components/common/PodcastCard';
+import '../components/common/Button/styles.css';
 
 const PodcastsPage = () => {
   const [search, setSearch] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [sortOption, setSortOption] = useState('az');
   const [podcasts, setPodcasts] = useState([]);
-  const [currentPodcast, setCurrentPodcast] = useState({ audioSrc: '', image: '' });  // State to manage the current playing podcast
+  const [currentPodcast, setCurrentPodcast] = useState({ audioSrc: '', image: '' });
 
   useEffect(() => {
-    // Simulated fetch from API
     const fetchData = async () => {
-      // Replace with actual API call
-      // Example fetch call
       const response = await fetch('https://podcast-api.netlify.app');
       const data = await response.json();
       setPodcasts(data);
@@ -24,6 +21,27 @@ const PodcastsPage = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchGenreDetails = async () => {
+      // Map through each podcast and fetch genre details for each genre ID
+      const updatedPodcasts = await Promise.all(
+        podcasts.map(async (podcast) => {
+          const updatedGenres = await Promise.all(
+            podcast.genres.map(async (genreId) => {
+              const genreResponse = await fetch(`https://podcast-api.netlify.app/genre/${genreId}`);
+              const genreData = await genreResponse.json();
+              return genreData.title; // Assuming genreData.title contains the genre title
+            })
+          );
+          return { ...podcast, genres: updatedGenres };
+        })
+      );
+      setPodcasts(updatedPodcasts);
+    };
+
+    fetchGenreDetails();
+  }, [podcasts]);
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
@@ -37,12 +55,10 @@ const PodcastsPage = () => {
     setSortOption(event.target.value);
   };
 
-  // Function to play a podcast (This should be updated to the actual podcast data structure)
   const playPodcast = (podcast) => {
     setCurrentPodcast(podcast);
   };
 
-  // Function to sort podcasts based on title
   const sortedPodcasts = [...podcasts].sort((a, b) => {
     if (sortOption === 'az') {
       return a.title.localeCompare(b.title);
@@ -52,7 +68,6 @@ const PodcastsPage = () => {
     return 0;
   });
 
-  // Filter podcasts based on search query and selected genre
   const filteredPodcasts = sortedPodcasts.filter(podcast => {
     return (
       podcast.title.toLowerCase().includes(search.toLowerCase()) &&
@@ -109,12 +124,10 @@ const PodcastsPage = () => {
         </div>
       </div>
       <div className="podcast-list">
-        {/* Map through filtered and sorted podcasts to render PodcastCard */}
         {filteredPodcasts.map(podcast => (
           <PodcastCard key={podcast.id} podcast={podcast} onClick={() => playPodcast(podcast)} />
         ))}
       </div>
-      {/* Add the AudioPlayer component here */}
       <AudioPlayer audioSrc={currentPodcast.audioSrc} image={currentPodcast.image} />
     </div>
   );
