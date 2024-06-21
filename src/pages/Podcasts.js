@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import Header from '../components/common/Header';
 import InputComponent from '../components/common/InputComponent';
 import AudioPlayer from '../components/common/AudioPlayer';
@@ -123,9 +126,34 @@ const PodcastsPage = () => {
     setSelectedSeason(season);
   };
 
+  // Sample carousel data
+  const carouselData = [
+    { id: 10716, title: 'Something Was Wrong', image: 'https://content.production.cdn.art19.com/images/cc/e5/0a/08/cce50a08-d77d-490e-8c68-17725541b0ca/9dcebd4019d57b9551799479fa226e2a79026be5e2743c7aef19eac53532a29d66954da6e8dbdda8219b059a59c0abe6dba6049892b10dfb2f25ed90d6fe8d9a.jpeg' },
+    { id: 9177, title: 'Killer Psyche', image: 'https://content.production.cdn.art19.com/images/68/4e/03/af/684e03af-29c5-4a35-b84a-d929f114caee/4f60eec3fabd62251d0cdbd1af11b79c43fb1465dbc5ec3371328fbddadee597e9f115c31b079e20266648ee07a80a93c01cecdb81ab3545d872393997594ef3.png' },
+    { id: 8514, title: 'Against The Odds', image: 'https://content.production.cdn.art19.com/images/a3/77/2c/e4/a3772ce4-34f7-431d-bf80-968f555b7003/6c099d5ec76b40bb54e72a75c1dcbc44c5c13a764114fb5183fe7eecd201619fca37cf3dd029c2fc320fb1a3cfab716d94297cbe7bb32ead208b779579015683.png' },
+    { id: 5276, title: 'Accused', image: 'https://content.production.cdn.art19.com/images/b3/37/52/bb/b33752bb-585a-47dc-a431-3aef17aacd66/b68b3e4a2e030d4f7ac3a518f4872e2f2985d04a130064bfb41034afe3c15824adafcbd488ce90463876b5b20bc589ead5c8c87b1c614a409d3affe444b2a0e0.jpeg' },
+    { id: 5718, title: 'Over My Dead Body', image: 'https://content.production.cdn.art19.com/images/59/93/d1/5a/5993d15a-b461-4418-97e6-96736913b9f0/cda3367cea57818b96d72a71a8a0d3de9287679c68b4e9f8775f0f764b04da2e2699cbe689f70118d232dd99875acfe3d4b7e00b8c3155f613b7b55f9aa0193a.png' }
+  ];
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1
+  };
+
   return (
     <div>
       <Header />
+      <Slider {...settings}>
+        {carouselData.map(item => (
+          <div key={item.id}>
+            <img src={item.image} alt={item.title} />
+            <h3>{item.title}</h3>
+          </div>
+        ))}
+      </Slider>
       <div className="input-wrapper">
         <h1>Discover Podcasts</h1>
         <div className="search-and-dropdown">
@@ -178,7 +206,6 @@ const PodcastsPage = () => {
                 value={sortByUpdateOption}
                 onChange={handleSortByUpdateChange}
               >
-                <option>Sort By Update</option>
                 <option value="most-recent">Newly Updated Shows</option>
                 <option value="least-recent">Oldest Updated Shows</option>
               </select>

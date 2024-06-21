@@ -54,3 +54,42 @@
   font-size: 0.9rem;
   color: var(--light-gray);
 }
+
+/* Carousel styles */
+.slick-slider {
+  margin-bottom: 10px;
+}
+
+.slick-slide {
+  padding: 0 0px;
+}
+
+.slick-slide img {
+  width: 60%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slick-prev,
+.slick-next {
+  font-size: 20px;
+  line-height: 1;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  cursor: pointer;
+}
+
+.slick-prev {
+  left: 4px;
+}
+
+.slick-next {
+  right: 2px;
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+  opacity: 0.8;
+}

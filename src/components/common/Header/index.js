@@ -9,7 +9,7 @@ const currentPath = location.pathname;
 return <div className="navbar">
 <div className="links">
 <div className="gradient"></div>
-<Link to="/home" className={currentPath == "/" ? "active" : ""}>
+<Link to="/podcasts" className={currentPath == "/" ? "active" : ""}>
 Home
 </Link>
 <Link to="/podcasts" className={currentPath == "/podcasts" ? "active" : ""}>
