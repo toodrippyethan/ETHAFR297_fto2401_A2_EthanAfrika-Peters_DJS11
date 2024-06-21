@@ -6,10 +6,8 @@ const PodcastCard = ({ podcast }) => {
     <div className="podcast-card">
       <img src={podcast.image} alt={podcast.title} className="display-image-podcast" />
       <div className="podcast-details">
-        <div className="title-and-season">
-          <h2 className="title-podcast">{podcast.title}</h2>
-          <p className="seasons">Seasons: {podcast.seasons}</p>
-        </div>
+        <h2 className="title-podcast">{podcast.title}</h2>
+        <p className="seasons">Seasons: {podcast.seasons}</p>
         <div className="genres">
           <p>Genres: {podcast.genres.join(', ')}</p>
         </div>

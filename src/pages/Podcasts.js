@@ -1,36 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/common/Header';
 import InputComponent from '../components/common/InputComponent';
-import AudioPlayer from '../components/common/AudioPlayer';
-import PodcastCard from '../components/common/PodcastCard'; // Import PodcastCard component
-import '../components/common/Button/styles.css'; // Ensure you import the styles here
+import AudioPlayer from '../components/common/AudioPlayer';  // Import the AudioPlayer component
+import PodcastCard from '../components/common/PodcastCard';  // Import the PodcastCard component
+import './styles.css'; // Ensure you import the styles here
 
-function PodcastsPage() {
-  const [podcasts, setPodcasts] = useState([]);
+const PodcastsPage = () => {
   const [search, setSearch] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
-  const [sortOption, setSortOption] = useState('');
+  const [sortOption, setSortOption] = useState('az');
+  const [podcasts, setPodcasts] = useState([]);
+  const [currentPodcast, setCurrentPodcast] = useState({ audioSrc: '', image: '' });  // State to manage the current playing podcast
 
   useEffect(() => {
-    // Fetch podcasts data from API or mock data
-    // Replace with actual fetch logic to retrieve podcasts from API
-    const fetchPodcasts = async () => {
-      // Example fetch request
-      try {
-        // Replace with your API endpoint for getting podcasts
-        const response = await fetch('https://podcast-api.netlify.app');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setPodcasts(data); // Assuming data is an array of podcasts from API
-      } catch (error) {
-        console.error('Error fetching podcasts:', error);
-        // Handle error
-      }
+    // Simulated fetch from API
+    const fetchData = async () => {
+      // Replace with actual API call
+      // Example fetch call
+      const response = await fetch('https://podcast-api.netlify.app');
+      const data = await response.json();
+      setPodcasts(data);
     };
 
-    fetchPodcasts();
+    fetchData();
   }, []);
 
   const handleSearchChange = (event) => {
@@ -45,32 +37,28 @@ function PodcastsPage() {
     setSortOption(event.target.value);
   };
 
-  // Function to sort podcasts based on sortOption (A-Z or Z-A)
-  const sortedPodcasts = () => {
-    let sorted = [...podcasts];
-    if (sortOption === 'az') {
-      sorted.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (sortOption === 'za') {
-      sorted.sort((a, b) => b.title.localeCompare(a.title));
-    }
-    return sorted;
+  // Function to play a podcast (This should be updated to the actual podcast data structure)
+  const playPodcast = (podcast) => {
+    setCurrentPodcast(podcast);
   };
 
-  // Function to filter podcasts based on search and selected genre
-  const filteredPodcasts = () => {
-    let filtered = [...podcasts];
-    if (search.trim() !== '') {
-      filtered = filtered.filter(podcast =>
-        podcast.title.toLowerCase().includes(search.toLowerCase())
-      );
+  // Function to sort podcasts based on title
+  const sortedPodcasts = [...podcasts].sort((a, b) => {
+    if (sortOption === 'az') {
+      return a.title.localeCompare(b.title);
+    } else if (sortOption === 'za') {
+      return b.title.localeCompare(a.title);
     }
-    if (selectedGenre !== '') {
-      filtered = filtered.filter(podcast =>
-        podcast.genres.includes(selectedGenre)
-      );
-    }
-    return filtered;
-  };
+    return 0;
+  });
+
+  // Filter podcasts based on search query and selected genre
+  const filteredPodcasts = sortedPodcasts.filter(podcast => {
+    return (
+      podcast.title.toLowerCase().includes(search.toLowerCase()) &&
+      (selectedGenre === '' || podcast.genres.includes(selectedGenre))
+    );
+  });
 
   return (
     <div>
@@ -87,21 +75,20 @@ function PodcastsPage() {
             />
           </div>
           <div className="dropdown-wrapper">
-            <label htmlFor="sortDropdown" className="label-input"></label>
+            <label htmlFor="sortDropdown" className="label-input">Sort By</label>
             <select
               id="sortDropdown"
               value={sortOption}
               onChange={handleSortChange}
               className="dropdown-select"
             >
-              <option value="">Sort By</option>
               <option value="az">A-Z</option>
               <option value="za">Z-A</option>
             </select>
           </div>
         </div>
         <div className="dropdown-wrapper center">
-          <label htmlFor="genreDropdown" className="label-input"></label>
+          <label htmlFor="genreDropdown" className="label-input">Filter By Genre</label>
           <select
             id="genreDropdown"
             value={selectedGenre}
@@ -109,42 +96,28 @@ function PodcastsPage() {
             className="dropdown-select"
           >
             <option value="">All Genres</option>
-            {genres.map((genre) => (
-              <option key={genre} value={genre}>{genre}</option>
-            ))}
+            <option value="Personal Growth">Personal Growth</option>
+            <option value="Investigative Journalism">Investigative Journalism</option>
+            <option value="History">History</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Business">Business</option>
+            <option value="Fiction">Fiction</option>
+            <option value="News">News</option>
+            <option value="Kids and Family">Kids and Family</option>
           </select>
         </div>
       </div>
       <div className="podcast-list">
-        {/* Render the filtered and sorted podcasts */}
-        {filteredPodcasts().map((podcast) => (
-          <PodcastCard key={podcast.id} podcast={podcast} />
+        {/* Map through filtered and sorted podcasts to render PodcastCard */}
+        {filteredPodcasts.map(podcast => (
+          <PodcastCard key={podcast.id} podcast={podcast} onClick={() => playPodcast(podcast)} />
         ))}
       </div>
       {/* Add the AudioPlayer component here */}
-      <AudioPlayer />
+      <AudioPlayer audioSrc={currentPodcast.audioSrc} image={currentPodcast.image} />
     </div>
   );
-}
-
-// Example of dummy podcast data
-const genres = [
-  'Personal Growth',
-  'Investigative Journalism',
-  'History',
-  'Comedy',
-  'Entertainment',
-  'Business',
-  'Fiction',
-  'News',
-  'Kids and Family',
-];
-
-// Example of dummy podcast data
-const dummyPodcasts = [
-  { id: 1, title: 'Podcast 1', image: 'path-to-image-1', genres: ['Comedy', 'Entertainment'], seasons: 3 },
-  { id: 2, title: 'Podcast 2', image: 'path-to-image-2', genres: ['Business', 'News'], seasons: 2 },
-  // Add more podcasts here
-];
+};
 
 export default PodcastsPage;
