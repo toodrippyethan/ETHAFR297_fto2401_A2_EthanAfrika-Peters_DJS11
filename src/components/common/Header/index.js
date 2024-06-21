@@ -15,7 +15,7 @@ Home
 <Link to="/podcasts" className={currentPath == "/podcasts" ? "active" : ""}>
 Podcasts
 </Link>
-<Link to="/favorite" className={currentPath == "/favorite" ? "active" : ""}>
+<Link to="/favorites" className={currentPath == "/favorites" ? "active" : ""}>
 Favorites
 </Link>
 <Link to="/profile" className={currentPath == "/profile" ? "active" : ""}>

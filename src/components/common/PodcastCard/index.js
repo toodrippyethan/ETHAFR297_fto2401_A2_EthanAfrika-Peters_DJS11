@@ -5,11 +5,15 @@ import './styles.css';
 
 const PodcastCard = ({ podcast, onClick, onAddToFavorites }) => {
   const handleClick = () => {
-    onClick(podcast);
+    if (onClick) {
+      onClick(podcast);
+    }
   };
 
   const handleAddToFavorites = () => {
-    onAddToFavorites(podcast);
+    if (onAddToFavorites) {
+      onAddToFavorites(podcast);
+    }
   };
 
   return (
@@ -21,7 +25,7 @@ const PodcastCard = ({ podcast, onClick, onAddToFavorites }) => {
           <p><strong>Genres:</strong> {podcast.genres.join(', ')}</p>
           <p><strong>Seasons:</strong> {podcast.seasons}</p>
           <p><strong>Updated:</strong> {podcast.updated}</p>
-          <button onClick={handleAddToFavorites}>Add to Favorites</button>
+          <button className="add-to-favorites-button" onClick={handleAddToFavorites}>Add to Favorites</button>
         </div>
       </div>
     </div>

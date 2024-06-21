@@ -1,5 +1,3 @@
-// PodcastsPage.js
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
@@ -8,7 +6,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Header from '../components/common/Header';
 import InputComponent from '../components/common/InputComponent';
 import PodcastCard from '../components/common/PodcastCard';
-import Favorites from './Favorite'; // Assuming Favorites component is in the same directory
+import Favorites from './Favorites'; // Assuming Favorites component is in the same directory
 import './styles.css';
 
 const PodcastsPage = () => {
@@ -79,18 +77,16 @@ const PodcastsPage = () => {
     setSortByUpdateOption(event.target.value);
   };
 
-  const handleAddToFavorites = (episode) => {
+  const handleAddToFavorites = (podcast) => {
     const newFavorite = {
-      episode,
-      show: episode.show,
-      season: episode.season,
+      podcast,
       favoritedAt: new Date().toLocaleString()
     };
     setFavorites([...favorites, newFavorite]);
   };
 
-  const removeFromFavorites = (episode) => {
-    const updatedFavorites = favorites.filter(fav => fav.episode.id !== episode.id);
+  const removeFromFavorites = (podcast) => {
+    const updatedFavorites = favorites.filter(fav => fav.podcast.id !== podcast.id);
     setFavorites(updatedFavorites);
   };
 
@@ -127,8 +123,8 @@ const PodcastsPage = () => {
     );
   });
 
-  const handleShowSelect = (show) => {
-    navigate(`/show/${show.id}`);
+  const handleCardClick = (podcastId) => {
+    navigate(`/show/${podcastId}`);
   };
 
   const settings = {
@@ -144,7 +140,7 @@ const PodcastsPage = () => {
       <Header />
       <Slider {...settings}>
         {filteredPodcasts.map(podcast => (
-          <div key={podcast.id} onClick={() => handleShowSelect(podcast)}>
+          <div key={podcast.id}>
             <img src={podcast.image} alt={podcast.title} />
             <h3>{podcast.title}</h3>
           </div>
@@ -211,7 +207,12 @@ const PodcastsPage = () => {
       </div>
       <div className="podcast-list">
         {filteredPodcasts.map(podcast => (
-          <PodcastCard key={podcast.id} podcast={podcast} onAddToFavorites={handleAddToFavorites} />
+          <PodcastCard
+            key={podcast.id}
+            podcast={podcast}
+            onAddToFavorites={handleAddToFavorites}
+            onClick={() => handleCardClick(podcast.id)} // Handle card click navigation
+          />
         ))}
       </div>
       <Favorites favorites={favorites} removeFromFavorites={removeFromFavorites} />

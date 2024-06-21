@@ -3,7 +3,7 @@ import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import "../../../index.css";
 
 function AudioPlayer({ audioSrc, image }) {
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isMute, setIsMute] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -70,13 +70,11 @@ function AudioPlayer({ audioSrc, image }) {
 
   useEffect(() => {
     if (!isMute) {
-      audioRef.current.volume = 1;
-      setVolume(1);
+      audioRef.current.volume = volume;
     } else {
       audioRef.current.volume = 0;
-      setVolume(0);
     }
-  }, [isMute]);
+  }, [isMute, volume]);
 
   return (
     <div className="custom-audio-player">
