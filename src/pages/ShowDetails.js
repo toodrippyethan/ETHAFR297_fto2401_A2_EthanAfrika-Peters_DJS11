@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import EpisodeList from '../Preview/EpisodeList';
+import EpisodeList from '../Preview//EpisodeList';
 import AudioPlayer from '../components/common/AudioPlayer';
-import '../index.css';
+import Header from '../components/common/Header';
+import './styles.css';
 
 const ShowDetails = () => {
   const { showid } = useParams();
@@ -47,6 +48,7 @@ const ShowDetails = () => {
 
   return (
     <div className="show-details-page">
+      <Header />
       {selectedShow ? (
         <>
           <h2>{selectedShow.title}</h2>
@@ -60,18 +62,23 @@ const ShowDetails = () => {
             ))}
           </div>
           {selectedSeason && (
-            <EpisodeList
-              episodes={selectedSeason.episodes}
-              onEpisodeSelect={handleEpisodeSelect}
-            />
+            <>
+              <h3>Season {selectedSeason.number}</h3>
+              <img src={selectedSeason.image} alt={`Season ${selectedSeason.number}`} className="selected-season-image" />
+              <EpisodeList
+                episodes={selectedSeason.episodes}
+                onEpisodeSelect={handleEpisodeSelect}
+              />
+            </>
           )}
           {selectedEpisode && (
             <AudioPlayer audioSrc={selectedEpisode.audioSrc} image={selectedShow.image} />
           )}
         </>
       ) : (
-        <div>Loading...</div>
+        <div>Error</div>
       )}
+     
     </div>
   );
 };
