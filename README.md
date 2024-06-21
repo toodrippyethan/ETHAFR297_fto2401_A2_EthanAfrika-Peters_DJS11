@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+Podcast App
+Welcome to the Podcast App, a portfolio piece showcasing your skills in React and API integration. This project allows users to browse, explore, and listen to podcasts with various features and functionalities.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Table of Contents
+Technology
+Data
+User Stories
+Setup Instructions
+Usage Examples
+Contact Information
+Technology
+This project is built using React for the frontend, incorporating state management and data fetching mechanisms typical in modern web applications. While TypeScript is recommended, the project can be adapted to use JavaScript if preferred.
 
-## Available Scripts
+Data
+The Podcast App retrieves data from a public API that provides information structured into three main units:
 
-In the project directory, you can run:
+SHOW: Represents a podcast series, which includes one or more seasons.
+SEASON: A collection of episodes released over a specific period within a SHOW.
+EPISODE: Corresponds to a specific audio file that users can listen to.
+Additional data includes:
 
-### `npm start`
+PREVIEW: Summarized information about a SHOW, often used for listing multiple podcasts.
+GENRE: Categories that can be assigned to a SHOW.
+Relationships
+Data relationships are structured such that SHOW contains SEASON(s), and SEASON contains EPISODE(s).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Endpoints
+Data is fetched from the following endpoints:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+https://podcast-api.netlify.app/: Returns an array of PREVIEW objects.
+https://podcast-api.netlify.app/genre/<ID>: Returns detailed GENRE information for a specific genre ID.
+https://podcast-api.netlify.app/id/<ID>: Returns detailed SHOW information including embedded SEASON and EPISODE objects.
+Genre Titles
+Genres are identified by IDs and corresponding titles:
 
-### `npm test`
+ID	Title
+1	Personal Growth
+2	Investigative Journalism
+3	History
+4	Comedy
+5	Entertainment
+6	Business
+7	Fiction
+8	News
+9	Kids and Family
+User Stories
+The Podcast App is designed to fulfill several user stories ranging from basic browsing functionalities to more advanced features like favoriting episodes and filtering by genres.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+For detailed user stories, please refer to the DJS rubric provided in your project guidelines.
 
-### `npm run build`
+Setup Instructions
+To run this project locally, follow these steps:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Clone the repository from GitHub:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+bash
+Copy code
+git clone <repository_url>
+Navigate into the project directory:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+bash
+Copy code
+cd podcast-app
+Install dependencies:
 
-### `npm run eject`
+bash
+Copy code
+npm install
+Start the development server:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+bash
+Copy code
+npm start
+Open your browser and visit http://localhost:3000 to view the app.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Usage Examples
+Here are some examples of how to use the Podcast App:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Browse Shows: View a list of available shows sorted alphabetically.
+Listen to Episodes: Navigate through seasons and episodes to listen to podcasts.
+Filter by Genre: Filter shows based on specific genres.
+Manage Favorites: Mark favorite episodes and manage them in a dedicated favorites view.
+Contact Information
+For any questions or feedback regarding this project, feel free to reach out to:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Name: Ethan Kyle Afrika-peters
+Email: afrikapetersek@gmail.com
