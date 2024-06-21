@@ -13,6 +13,7 @@ const PodcastsPage = () => {
   const [search, setSearch] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [sortOption, setSortOption] = useState('az');
+  const [sortByUpdateOption, setSortByUpdateOption] = useState('');
   const [podcasts, setPodcasts] = useState([]);
   const [currentPodcast, setCurrentPodcast] = useState({ audioSrc: '', image: '' });
   const [selectedShow, setSelectedShow] = useState(null);
@@ -28,34 +29,32 @@ const PodcastsPage = () => {
         }
         const data = await response.json();
 
-        const formattedPodcasts = data.map(podcast => ({
-          ...podcast,
-          updated: new Date(podcast.updated).toLocaleDateString('en-US', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-          }),
-          genres: podcast.genres.map(genreId => {
-            return fetch(`https://podcast-api.netlify.app/genre/${genreId}`)
-              .then(response => response.json())
-              .then(genreData => genreData.title)
-              .catch(error => {
-                console.error('Error fetching genre:', error);
-                return 'Unknown Genre';
-              });
-          })
-        }));
-
-        Promise.all(formattedPodcasts.map(podcast =>
-          Promise.all(podcast.genres)
-            .then(genres => ({
+        const podcastsWithGenres = await Promise.all(
+          data.map(async podcast => {
+            const genres = await Promise.all(
+              podcast.genres.map(async genreId => {
+                const genreResponse = await fetch(`https://podcast-api.netlify.app/genre/${genreId}`);
+                if (!genreResponse.ok) {
+                  console.error('Error fetching genre:', genreResponse.statusText);
+                  return 'Unknown Genre';
+                }
+                const genreData = await genreResponse.json();
+                return genreData.title;
+              })
+            );
+            return {
               ...podcast,
+              updated: new Date(podcast.updated).toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+              }),
               genres
-            }))
-        ))
-          .then(updatedPodcasts => {
-            setPodcasts(updatedPodcasts);
-          });
+            };
+          })
+        );
+
+        setPodcasts(podcastsWithGenres);
       } catch (error) {
         console.error('Error fetching podcasts:', error);
       }
@@ -76,40 +75,39 @@ const PodcastsPage = () => {
     setSortOption(event.target.value);
   };
 
-  const handleSortByUpdate = (event) => {
-    const sortBy = event.target.value;
-    const sortedPodcasts = [...podcasts].sort((a, b) => {
+  const handleSortByUpdateChange = (event) => {
+    setSortByUpdateOption(event.target.value);
+  };
+
+  const getSortedPodcasts = () => {
+    let sortedPodcasts = [...podcasts];
+
+    // Sort by title
+    sortedPodcasts = sortedPodcasts.sort((a, b) => {
+      if (sortOption === 'az') {
+        return a.title.localeCompare(b.title);
+      } else if (sortOption === 'za') {
+        return b.title.localeCompare(a.title);
+      }
+      return 0;
+    });
+
+    // Sort by update date
+    sortedPodcasts = sortedPodcasts.sort((a, b) => {
       const dateA = new Date(a.updated);
       const dateB = new Date(b.updated);
-      if (sortBy === 'most-recent') {
+      if (sortByUpdateOption === 'most-recent') {
         return dateB - dateA;
-      } else if (sortBy === 'least-recent') {
+      } else if (sortByUpdateOption === 'least-recent') {
         return dateA - dateB;
       }
       return 0;
     });
-    setPodcasts(sortedPodcasts);
+
+    return sortedPodcasts;
   };
 
-  const playPodcast = (podcast) => {
-    setCurrentPodcast(podcast);
-  };
-
-  const clearSelection = () => {
-    setSelectedShow(null);
-    setSelectedSeason(null);
-  };
-
-  const sortedPodcasts = [...podcasts].sort((a, b) => {
-    if (sortOption === 'az') {
-      return a.title.localeCompare(b.title);
-    } else if (sortOption === 'za') {
-      return b.title.localeCompare(a.title);
-    }
-    return 0;
-  });
-
-  const filteredPodcasts = sortedPodcasts.filter(podcast => {
+  const filteredPodcasts = getSortedPodcasts().filter(podcast => {
     return (
       podcast.title.toLowerCase().includes(search.toLowerCase()) &&
       (selectedGenre === '' || podcast.genres.includes(selectedGenre))
@@ -177,8 +175,10 @@ const PodcastsPage = () => {
               <select
                 id="updateDropdown"
                 className="dropdown-select"
-                onChange={handleSortByUpdate}
+                value={sortByUpdateOption}
+                onChange={handleSortByUpdateChange}
               >
+                <option>Sort By Update</option>
                 <option value="most-recent">Newly Updated Shows</option>
                 <option value="least-recent">Oldest Updated Shows</option>
               </select>
