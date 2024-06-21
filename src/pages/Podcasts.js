@@ -3,7 +3,7 @@ import Header from '../components/common/Header';
 import InputComponent from '../components/common/InputComponent';
 import AudioPlayer from '../components/common/AudioPlayer';
 import PodcastCard from '../components/common/PodcastCard';
-import '../components/common/Button/styles.css';
+import './styles.css';
 
 const PodcastsPage = () => {
   const [search, setSearch] = useState('');
@@ -23,7 +23,7 @@ const PodcastsPage = () => {
   }, []);
 
   useEffect(() => {
-    const fetchGenreDetails = async () => {
+    const fetchPodcastDetails = async () => {
       // Map through each podcast and fetch genre details for each genre ID
       const updatedPodcasts = await Promise.all(
         podcasts.map(async (podcast) => {
@@ -34,13 +34,24 @@ const PodcastsPage = () => {
               return genreData.title; // Assuming genreData.title contains the genre title
             })
           );
-          return { ...podcast, genres: updatedGenres };
+
+          // Format the 'updated' field into a readable date format
+          const updatedDate = new Date(podcast.updated);
+          const monthNames = [
+            'January', 'February', 'March',
+            'April', 'May', 'June', 'July',
+            'August', 'September', 'October',
+            'November', 'December'
+          ];
+          const readableUpdated = `${updatedDate.getDate()} ${monthNames[updatedDate.getMonth()]} ${updatedDate.getFullYear()}`;
+
+          return { ...podcast, genres: updatedGenres, readableUpdated };
         })
       );
       setPodcasts(updatedPodcasts);
     };
 
-    fetchGenreDetails();
+    fetchPodcastDetails();
   }, [podcasts]);
 
   const handleSearchChange = (event) => {
@@ -125,7 +136,15 @@ const PodcastsPage = () => {
       </div>
       <div className="podcast-list">
         {filteredPodcasts.map(podcast => (
-          <PodcastCard key={podcast.id} podcast={podcast} onClick={() => playPodcast(podcast)} />
+          <div key={podcast.id} className="podcast-card" onClick={() => playPodcast(podcast)}>
+            <img src={podcast.image} alt={podcast.title} className="display-image-podcast" />
+            <div className="podcast-details">
+              <h2 className="title-podcast">{podcast.title}</h2>
+              <p className="genres">Genres: {podcast.genres.join(', ')}</p>
+              <p className="seasons">Seasons: {podcast.seasons}</p>
+              <p className="updated">Last Updated: {podcast.readableUpdated}</p>
+            </div>
+          </div>
         ))}
       </div>
       <AudioPlayer audioSrc={currentPodcast.audioSrc} image={currentPodcast.image} />
