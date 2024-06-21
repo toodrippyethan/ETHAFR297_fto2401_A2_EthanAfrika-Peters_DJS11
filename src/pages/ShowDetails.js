@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import SeasonSelector from '../Preview/SeasonSelector';
-import EpisodeList from '../Preview/EpisodeList';
-import './styles.css'; // Ensure styles are correctly imported
+import AudioPlayer from '../components/common/AudioPlayer'; // Assuming you have this component
+import './styles.css';
 
 const ShowDetails = () => {
   const { showid } = useParams();
@@ -47,24 +46,44 @@ const ShowDetails = () => {
 
   return (
     <div className="show-details-page">
-      {selectedShow && (
+      {selectedShow ? (
         <>
           <h2>{selectedShow.title}</h2>
-          <SeasonSelector seasons={selectedShow.seasons} onSelectSeason={handleSeasonSelect} />
+          <div className="season-dropdown">
+            <h3>Select Season:</h3>
+            <select
+              value={selectedSeason ? selectedSeason.number : ''}
+              onChange={(e) => handleSeasonSelect(parseInt(e.target.value))}
+            >
+              {selectedShow.seasons.map(season => (
+                <option key={season.number} value={season.number}>
+                  Season {season.number}
+                </option>
+              ))}
+            </select>
+          </div>
           {selectedSeason && (
             <>
               <h3>Season {selectedSeason.number}</h3>
               <img src={selectedSeason.image} alt={`Season ${selectedSeason.number}`} className="selected-season-image" />
-              <EpisodeList episodes={selectedSeason.episodes} onEpisodeSelect={handleEpisodeSelect} />
+              <div className="episode-list">
+                <h4>Episodes:</h4>
+                <ul>
+                  {selectedSeason.episodes.map(episode => (
+                    <li key={episode.id} onClick={() => handleEpisodeSelect(episode)}>
+                      {episode.name} {/* Adjust property based on your data */}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </>
           )}
           {selectedEpisode && (
-            <div>
-              <h4>Selected Episode: {selectedEpisode.name}</h4>
-              {/* Render additional details for the selected episode */}
-            </div>
+            <AudioPlayer audioSrc={selectedEpisode.audioSrc} image={selectedShow.image} />
           )}
         </>
+      ) : (
+        <div>Loading...</div>
       )}
     </div>
   );

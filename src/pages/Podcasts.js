@@ -189,9 +189,7 @@ const PodcastsPage = () => {
       </div>
       <div className="podcast-list">
         {filteredPodcasts.map(podcast => (
-          <Link key={podcast.id} to={`/show/${podcast.id}`}>
-            <PodcastCard podcast={podcast} onClick={() => handleShowSelect(podcast)} />
-          </Link>
+          <PodcastCard key={podcast.id} podcast={podcast} onClick={() => handleShowSelect(podcast)} />
         ))}
       </div>
       {selectedShow && (
@@ -200,7 +198,7 @@ const PodcastsPage = () => {
           <ShowPreview images={selectedShow.seasonImages} />
           <SeasonSelector seasons={selectedShow.seasons} onSelectSeason={handleSeasonSelect} />
           {selectedSeason && (
-            <EpisodeList episodes={selectedShow.episodes[selectedSeason - 1]} />
+            <EpisodeList episodes={selectedSeason.episodes} />
           )}
         </div>
       )}
