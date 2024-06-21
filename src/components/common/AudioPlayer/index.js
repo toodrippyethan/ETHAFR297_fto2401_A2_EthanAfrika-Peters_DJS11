@@ -10,11 +10,6 @@ function AudioPlayer({ audioSrc, image }) {
   const [volume, setVolume] = useState(1);
   const audioRef = useRef();
 
-  const handleDuration = (e) => {
-    setCurrentTime(e.target.value);
-    audioRef.current.currentTime = e.target.value;
-  };
-
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
   };
@@ -25,7 +20,6 @@ function AudioPlayer({ audioSrc, image }) {
 
   const handleVolume = (e) => {
     setVolume(e.target.value);
-    audioRef.current.volume = e.target.value;
   };
 
   const formatTime = (time) => {
@@ -36,6 +30,20 @@ function AudioPlayer({ audioSrc, image }) {
 
   useEffect(() => {
     const audio = audioRef.current;
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+    };
+
+    const handleEnded = () => {
+      setCurrentTime(0);
+      setIsPlaying(false);
+    };
+
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("ended", handleEnded);
@@ -47,33 +55,18 @@ function AudioPlayer({ audioSrc, image }) {
     };
   }, []);
 
-  const handleTimeUpdate = () => {
-    setCurrentTime(audioRef.current.currentTime);
-  };
-
-  const handleLoadedMetadata = () => {
-    setDuration(audioRef.current.duration);
-  };
-
-  const handleEnded = () => {
-    setCurrentTime(0);
-    setIsPlaying(false);
-  };
-
   useEffect(() => {
     if (isPlaying) {
-      audioRef.current.play();
+      audioRef.current.play().catch((error) => {
+        console.error("Failed to play:", error);
+      });
     } else {
       audioRef.current.pause();
     }
   }, [isPlaying]);
 
   useEffect(() => {
-    if (!isMute) {
-      audioRef.current.volume = volume;
-    } else {
-      audioRef.current.volume = 0;
-    }
+    audioRef.current.volume = isMute ? 0 : volume;
   }, [isMute, volume]);
 
   return (
@@ -87,9 +80,12 @@ function AudioPlayer({ audioSrc, image }) {
         <p>{formatTime(currentTime)}</p>
         <input
           type="range"
-          max={duration}
+          max={duration || 0}
           value={currentTime}
-          onChange={handleDuration}
+          onChange={(e) => {
+            setCurrentTime(e.target.value);
+            audioRef.current.currentTime = e.target.value;
+          }}
           step={0.01}
           className="duration-range"
         />
@@ -100,7 +96,7 @@ function AudioPlayer({ audioSrc, image }) {
       </p>
       <input
         type="range"
-        value={volume}
+        value={isMute ? 0 : volume}
         max={1}
         min={0}
         step={0.01}
