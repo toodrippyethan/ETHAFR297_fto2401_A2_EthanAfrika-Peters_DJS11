@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import SeasonSelector from '../Preview/SeasonSelector';
 import EpisodeList from '../Preview/EpisodeList';
-import AudioPlayer from '../components/common/AudioPlayer';
-import Header from '../components/common/Header';
-import './styles.css';
+import './styles.css'; // Ensure styles are correctly imported
 
 const ShowDetails = () => {
   const { showid } = useParams();
@@ -11,7 +10,6 @@ const ShowDetails = () => {
   const [selectedSeason, setSelectedSeason] = useState(null);
   const [selectedEpisode, setSelectedEpisode] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchShowDetails = async () => {
@@ -26,7 +24,6 @@ const ShowDetails = () => {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching show details:', error);
-        setError(error.message);
         setLoading(false);
       }
     };
@@ -48,60 +45,26 @@ const ShowDetails = () => {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <div className="show-details-page">
-      <Header />
-      {selectedShow ? (
+      {selectedShow && (
         <>
           <h2>{selectedShow.title}</h2>
-          <div className="season-preview">
-            {/* Dropdown to select seasons */}
-            <select
-              value={selectedSeason ? selectedSeason.number : ''}
-              onChange={(e) => handleSeasonSelect(Number(e.target.value))}
-              className="season-dropdown"
-            >
-              {selectedShow.seasons.map(season => (
-                <option key={season.number} value={season.number}>
-                  Season {season.number}
-                </option>
-              ))}
-            </select>
-          </div>
+          <SeasonSelector seasons={selectedShow.seasons} onSelectSeason={handleSeasonSelect} />
           {selectedSeason && (
             <>
-              <div className="season-details">
-                <h3>Season {selectedSeason.number}</h3>
-                <img
-                  src={selectedSeason.image}
-                  alt={`Season ${selectedSeason.number}`}
-                  className="selected-season-image"
-                />
-                <p>{selectedSeason.description}</p>
-              </div>
-              <div className="episode-list">
-                <h4>Episodes</h4>
-                <ul>
-                  {selectedSeason.episodes.map((episode, index) => (
-                    <li key={index} onClick={() => handleEpisodeSelect(episode)}>
-                      {episode.title}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              {/* Audio player for selected episode */}
-              {selectedEpisode && (
-                <AudioPlayer audioSrc={selectedEpisode.audioSrc} image={selectedShow.image} />
-              )}
+              <h3>Season {selectedSeason.number}</h3>
+              <img src={selectedSeason.image} alt={`Season ${selectedSeason.number}`} className="selected-season-image" />
+              <EpisodeList episodes={selectedSeason.episodes} onEpisodeSelect={handleEpisodeSelect} />
             </>
           )}
+          {selectedEpisode && (
+            <div>
+              <h4>Selected Episode: {selectedEpisode.name}</h4>
+              {/* Render additional details for the selected episode */}
+            </div>
+          )}
         </>
-      ) : (
-        <div>No show details available.</div>
       )}
     </div>
   );

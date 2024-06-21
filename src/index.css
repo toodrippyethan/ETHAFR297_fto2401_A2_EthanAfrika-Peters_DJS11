@@ -305,3 +305,41 @@ a {
 .volume-range {
   width: 100px;
 }
+
+.season-selector {
+  margin-bottom: 20px;
+}
+
+.season-selector ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.season-selector ul li {
+  margin-bottom: 10px;
+}
+
+.selected-season-image {
+  max-width: 100%;
+  height: auto;
+  margin-top: 20px;
+}
+
+.episode-list {
+  margin-top: 20px;
+}
+
+.episode-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.episode-list ul li {
+  cursor: pointer;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.episode-list ul li:hover {
+  background-color: #f0f0f0;
+}

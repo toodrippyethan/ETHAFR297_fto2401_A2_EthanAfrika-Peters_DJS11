@@ -4,15 +4,13 @@ const SeasonSelector = ({ seasons, onSelectSeason }) => {
   return (
     <div className="season-selector">
       <h3>Select Season:</h3>
-      <ul>
-        {seasons.map(season => (
-          <li key={season.number}>
-            <button onClick={() => onSelectSeason(season.number)}>
-              Season {season.number}
-            </button>
-          </li>
+      <select className="season-dropdown" onChange={(e) => onSelectSeason(parseInt(e.target.value))}>
+        {seasons.map((season, index) => (
+          <option key={season.number} value={season.number}>
+            Season {index + 1}
+          </option>
         ))}
-      </ul>
+      </select>
     </div>
   );
 };

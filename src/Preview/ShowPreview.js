@@ -1,10 +1,10 @@
 import React from 'react';
 
-const ShowPreview = ({ images }) => {
+const ShowPreview = ({ seasons }) => {
   return (
     <div className="show-preview">
-      {images.map((image, index) => (
-        <img key={index} src={image.url} alt={`Season ${index + 1}`} className="season-image" />
+      {seasons.map(season => (
+        <img key={season.number} src={season.image} alt={`Season ${season.number}`} className="season-image" />
       ))}
     </div>
   );
